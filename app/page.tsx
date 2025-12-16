@@ -11,19 +11,21 @@ export default function Home() {
       name: "NFL Play-by-Play ML Pipeline",
       desc: "Feature engineering + model training + evaluation (ROC-AUC / CV).",
       tags: ["Python", "pandas", "scikit-learn", "XGBoost"],
-      link: "#",
+      link: "https://colab.research.google.com/drive/1cXyP8DP4dS2wa59tvASfKJl5-3Zb9NL6?usp=sharing",
     },
     {
       name: "EEG / iEEG Data Standardization Pipeline",
       desc: "Convert MAT/EDF/BDF → standardized formats + metadata + QA checks.",
       tags: ["Python", "Data Engineering", "QA"],
-      link: "#",
+      link: "",
+      privateNote: "Private lab repo (available upon request)",
     },
     {
       name: "Monte Carlo Simulation (Risk / Strategy)",
       desc: "Simulation modeling for decision-making and uncertainty analysis.",
       tags: ["Simulation", "Monte Carlo", "Analytics"],
-      link: "#",
+      link: "",
+      privateNote: "Write-up in progress",
     },
   ];
 
