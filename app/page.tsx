@@ -4,7 +4,7 @@ export default function Home() {
   const email = "cchen90@stevens.edu"; // 你也可以换成常用邮箱
   const github = "https://github.com/Changye0125";
   const linkedin = "https://www.linkedin.com"; // 换成你的 LinkedIn 链接
-  const resume = "#"; // 你可以先留着，之后放简历 PDF 链接
+  const resume = "/Changye_Resume.pdf"; // 你可以先留着，之后放简历 PDF 链接
 
   const projects = [
     {
