@@ -24,8 +24,8 @@ export default function Home() {
       name: "Monte Carlo Simulation (Risk / Strategy)",
       desc: "Simulation modeling for decision-making and uncertainty analysis.",
       tags: ["Simulation", "Monte Carlo", "Analytics"],
-      link: "",
-      privateNote: "Write-up in progress",
+      link: "https://colab.research.google.com/drive/1FrYON171XMlLIq9T_8V8JcveaYF7LTzh?usp=sharing",
+      
     },
   ];
 
