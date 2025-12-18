@@ -1,3 +1,12 @@
+type Project = {
+  name: string;
+  desc: string;
+  tags: string[];
+  ppt?: string;
+  link?: string;
+  privateNote?: string;
+};
+
 export default function Home() {
   const name = "Changye Chen";
   const title = "Engineering Management • Data & ML • Portfolio";
@@ -9,7 +18,7 @@ export default function Home() {
   const projects: Project[] = [
     {
       name: "NFL Play-by-Play ML Pipeline",
-      desc: "P",
+      desc: "Pre-game NFL outcome prediction requires strict avoidance of information leakage while maintaining interpretability. A leakage-free pipeline was constructed using matchup-based recent-form feature engineering (e.g., win-rate, scoring, and point-differential trends), followed by cross-validated benchmarking across multiple classifiers and SHAP-based model interpretation. Results indicated Logistic Regression as the top performer (ROC-AUC ≈ 0.637), with recent scoring/momentum signals emerging as the strongest drivers of predicted win probability.",
       tags: ["Python", "pandas", "scikit-learn", "XGBoost"],
       // 这个文件要在 public/ 里，且文件名为：EM624 - Predicting NFL Game Outcomes.pptx
       ppt: "/EM624%20-%20Predicting%20NFL%20Game%20Outcomes.pptx",
