@@ -19,14 +19,14 @@ export default function Home() {
       desc: "Convert MAT/EDF/BDF → standardized formats + metadata + QA checks.",
       tags: ["Python", "Data Engineering", "QA"],
       ppt: "",
-      code_link: "https://colab.research.google.com/drive/1cXyP8DP4dS2wa59tvASfKJl5-3Zb9NL6?usp=sharing",
+      link: "",
       privateNote: "Private lab repo (available upon request)",
     },
     {
       name: "Monte Carlo Simulation (Risk / Strategy)",
       desc: "Simulation modeling for decision-making and uncertainty analysis.",
       tags: ["Simulation", "Monte Carlo", "Analytics"],
-      ppt: "https://YOUR_PPT_LINK_HERE",
+      ppt: "public/SYS611_TermProject_NFL4thDown_MonteCarlo.pdf",
       link: "https://colab.research.google.com/drive/1FrYON171XMlLIq9T_8V8JcveaYF7LTzh?usp=sharing",
     },
   ];
