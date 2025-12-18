@@ -11,7 +11,7 @@ export default function Home() {
       name: "NFL Play-by-Play ML Pipeline",
       desc: "Feature engineering + model training + evaluation (ROC-AUC / CV).",
       tags: ["Python", "pandas", "scikit-learn", "XGBoost"],
-      ppt: "public/EM624 - Predicting NFL Game Outcomes.pptx",
+      ppt: "/EM624%20-%20Predicting%20NFL%20Game%20Outcomes.pptx",
       link: "https://colab.research.google.com/drive/1cXyP8DP4dS2wa59tvASfKJl5-3Zb9NL6?usp=sharing",
     },
     {
@@ -26,7 +26,7 @@ export default function Home() {
       name: "Monte Carlo Simulation (Risk / Strategy)",
       desc: "Simulation modeling for decision-making and uncertainty analysis.",
       tags: ["Simulation", "Monte Carlo", "Analytics"],
-      ppt: "public/SYS611_TermProject_NFL4thDown_MonteCarlo.pdf",
+      ppt: "/SYS611_TermProject_NFL4thDown_MonteCarlo.pdf",
       link: "https://colab.research.google.com/drive/1FrYON171XMlLIq9T_8V8JcveaYF7LTzh?usp=sharing",
     },
   ];
@@ -118,83 +118,70 @@ export default function Home() {
               (click to add links later)
             </span>
           </div>
-
-          <div className="mt-5 grid gap-4">
-          {projects.map((p) => {
-            const clickable = !!p.link;
-          
-            const Card = (
-              <div
-                className={[
-                  "group rounded-2xl border bg-white p-5 shadow-sm transition dark:bg-zinc-950",
-                  "border-zinc-200 dark:border-zinc-800",
-                  clickable
-                    ? "hover:-translate-y-0.5 hover:border-zinc-300 dark:hover:border-zinc-700 cursor-pointer"
-                    : "opacity-90 cursor-not-allowed",
-                ].join(" ")}
-                title={clickable ? "Open link" : (p.privateNote ?? "Private / available upon request")}
-              >
-                <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-base font-semibold">{p.name}</h3>
-          
-                      {!clickable && (
-                        <span className="rounded-full border border-zinc-200 bg-zinc-50 px-2 py-0.5 text-xs text-zinc-600 dark:border-zinc-800 dark:bg-black dark:text-zinc-300">
-                          {p.privateNote ?? "Private"}
-                        </span>
-                      )}
-                    </div>
-          
-                    <p className="mt-1 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
-                      {p.desc}
-                    </p>
-                  </div>
-          
-                  <div className="flex flex-wrap gap-2 sm:justify-end">
-                    {p.tags.map((t) => (
-                      <span
-                        key={t}
-                        className="rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1 text-xs text-zinc-700 dark:border-zinc-800 dark:bg-black dark:text-zinc-300"
-                      >
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+  <div className="mt-5 grid gap-4">
+    {projects.map((p) => {
+      const hasPpt = !!p.ppt;
+      const hasLink = !!p.link;
+      const hasAnyLink = hasPpt || hasLink;
+  
+      return (
+        <div
+          key={p.name}
+          className="group rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm transition dark:border-zinc-800 dark:bg-zinc-950"
+        >
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+            {/* Left */}
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="text-base font-semibold">{p.name}</h3>
+  
+                {!hasAnyLink && (
+                  <span className="rounded-full border border-zinc-200 bg-zinc-50 px-2 py-0.5 text-xs text-zinc-600 dark:border-zinc-800 dark:bg-black dark:text-zinc-300">
+                    {p.privateNote ?? "Private"}
+                  </span>
+                )}
               </div>
-            );
-          
-            return clickable ? (
-              <a
-                key={p.name}
-                href={p.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block"
-              >
-                {Card}
-              </a>
-            ) : (
-              <div key={p.name}>{Card}</div>
-            );
-          })}
+  
+              <p className="mt-1 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+                {p.desc}
+              </p>
+            </div>
+  
+            {/* Right: PPT / Link buttons + tags */}
+            <div className="flex flex-wrap items-center gap-2 sm:justify-end">
+              {hasPpt && (
+                <a
+                  href={p.ppt}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full border border-zinc-300 bg-white px-3 py-1 text-xs font-medium text-zinc-900 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50 dark:hover:bg-zinc-900"
+                >
+                  PPT
+                </a>
+              )}
+  
+              {hasLink && (
+                <a
+                  href={p.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full border border-zinc-300 bg-white px-3 py-1 text-xs font-medium text-zinc-900 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50 dark:hover:bg-zinc-900"
+                >
+                  Link
+                </a>
+              )}
+  
+              {p.tags.map((t) => (
+                <span
+                  key={t}
+                  className="rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1 text-xs text-zinc-700 dark:border-zinc-800 dark:bg-black dark:text-zinc-300"
+                >
+                  {t}
+                </span>
+              ))}
+            </div>
           </div>
-        </section>
-
-        {/* Footer */}
-        <footer className="mt-16 border-t border-zinc-200 pt-8 text-sm text-zinc-600 dark:border-zinc-800 dark:text-zinc-400">
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <span>© {new Date().getFullYear()} {name}</span>
-            <span>
-              Contact:{" "}
-              <a className="underline hover:text-zinc-900 dark:hover:text-zinc-50" href={`mailto:${email}`}>
-                {email}
-              </a>
-            </span>
-          </div>
-        </footer>
-      </main>
-    </div>
-  );
-}
+        </div>
+      );
+    })}
+  </div>
