@@ -11,7 +11,7 @@ export default function Home() {
       name: "NFL Play-by-Play ML Pipeline",
       desc: "Feature engineering + model training + evaluation (ROC-AUC / CV).",
       tags: ["Python", "pandas", "scikit-learn", "XGBoost"],
-      ppt: "https://YOUR_PPT_LINK_HERE",
+      ppt: "public/EM624 - Predicting NFL Game Outcomes.pptx",
       link: "https://colab.research.google.com/drive/1cXyP8DP4dS2wa59tvASfKJl5-3Zb9NL6?usp=sharing",
     },
     {
