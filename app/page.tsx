@@ -13,7 +13,7 @@ export default function Home() {
       tags: ["Python", "pandas", "scikit-learn", "XGBoost"],
       // 这个文件要在 public/ 里，且文件名为：EM624 - Predicting NFL Game Outcomes.pptx
       ppt: "/EM624%20-%20Predicting%20NFL%20Game%20Outcomes.pptx",
-      code_link: "https://colab.research.google.com/drive/1cXyP8DP4dS2wa59tvASfKJl5-3Zb9NL6?usp=sharing",
+      link: "https://colab.research.google.com/drive/1cXyP8DP4dS2wa59tvASfKJl5-3Zb9NL6?usp=sharing",
     },
     {
       name: "EEG / iEEG Data Standardization Pipeline",
@@ -28,8 +28,8 @@ export default function Home() {
       desc: "Fourth-down decision-making under uncertainty requires an explicit trade-off between expected points and downside risk. Key transition and scoring parameters were estimated from historical play-by-play data, and a game-level Monte Carlo simulation was developed to compare conservative, balanced, and aggressive fourth-down policies with 95% confidence intervals. Results suggested that more aggressive policies yield a modest increase in scoring on average, but substantially increase fourth-down attempts and turnover-on-downs exposure, making the risk–reward trade-off explicit.",
       tags: ["Simulation", "Monte Carlo", "Analytics"],
       // 这个文件要在 public/ 里
-      pdf: "/SYS611_TermProject_NFL4thDown_MonteCarlo.pdf",
-      code_link: "https://colab.research.google.com/drive/1FrYON171XMlLIq9T_8V8JcveaYF7LTzh?usp=sharing",
+      ppt: "/SYS611_TermProject_NFL4thDown_MonteCarlo.pdf",
+      link: "https://colab.research.google.com/drive/1FrYON171XMlLIq9T_8V8JcveaYF7LTzh?usp=sharing",
     },
   ];
 
