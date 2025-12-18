@@ -5,30 +5,31 @@ export default function Home() {
   const github = "https://github.com/Changye0125";
   const linkedin = "https://www.linkedin.com"; // 换成你的 LinkedIn 链接
   const resume = "/Changye_Resume.pdf"; // 你可以先留着，之后放简历 PDF 链接
-
+  
   const projects = [
     {
       name: "NFL Play-by-Play ML Pipeline",
       desc: "Feature engineering + model training + evaluation (ROC-AUC / CV).",
       tags: ["Python", "pandas", "scikit-learn", "XGBoost"],
+      ppt: "https://YOUR_PPT_LINK_HERE",
       link: "https://colab.research.google.com/drive/1cXyP8DP4dS2wa59tvASfKJl5-3Zb9NL6?usp=sharing",
     },
     {
       name: "EEG / iEEG Data Standardization Pipeline",
       desc: "Convert MAT/EDF/BDF → standardized formats + metadata + QA checks.",
       tags: ["Python", "Data Engineering", "QA"],
-      link: "",
+      ppt: "",
+      code_link: "https://colab.research.google.com/drive/1cXyP8DP4dS2wa59tvASfKJl5-3Zb9NL6?usp=sharing",
       privateNote: "Private lab repo (available upon request)",
     },
     {
       name: "Monte Carlo Simulation (Risk / Strategy)",
       desc: "Simulation modeling for decision-making and uncertainty analysis.",
       tags: ["Simulation", "Monte Carlo", "Analytics"],
+      ppt: "https://YOUR_PPT_LINK_HERE",
       link: "https://colab.research.google.com/drive/1FrYON171XMlLIq9T_8V8JcveaYF7LTzh?usp=sharing",
-      
     },
   ];
-
   return (
     <div className="min-h-screen bg-zinc-50 text-zinc-900 dark:bg-black dark:text-zinc-50">
       <main className="mx-auto max-w-4xl px-6 py-16">
