@@ -6,23 +6,14 @@ export default function Home() {
   const linkedin = "https://www.linkedin.com";
   const resume = "/Changye_Resume.pdf";
 
-  type Project = {
-    name: string;
-    desc: string;
-    tags: string[];
-    ppt?: string;
-    link?: string;
-    privateNote?: string;
-  };
-
   const projects: Project[] = [
     {
       name: "NFL Play-by-Play ML Pipeline",
-      desc: "Feature engineering + model training + evaluation (ROC-AUC / CV).",
+      desc: "Pre-game NFL outcome prediction requires strict avoidance of information leakage while maintaining interpretability. A leakage-free pipeline was constructed using matchup-based recent-form feature engineering (e.g., win-rate, scoring, and point-differential trends), followed by cross-validated benchmarking across multiple classifiers and SHAP-based model interpretation. Results indicated Logistic Regression as the top performer (ROC-AUC ≈ 0.637), with recent scoring/momentum signals emerging as the strongest drivers of predicted win probability.",
       tags: ["Python", "pandas", "scikit-learn", "XGBoost"],
       // 这个文件要在 public/ 里，且文件名为：EM624 - Predicting NFL Game Outcomes.pptx
       ppt: "/EM624%20-%20Predicting%20NFL%20Game%20Outcomes.pptx",
-      link: "https://colab.research.google.com/drive/1cXyP8DP4dS2wa59tvASfKJl5-3Zb9NL6?usp=sharing",
+      code_link: "https://colab.research.google.com/drive/1cXyP8DP4dS2wa59tvASfKJl5-3Zb9NL6?usp=sharing",
     },
     {
       name: "EEG / iEEG Data Standardization Pipeline",
@@ -34,11 +25,11 @@ export default function Home() {
     },
     {
       name: "Monte Carlo Simulation (Risk / Strategy)",
-      desc: "Simulation modeling for decision-making and uncertainty analysis.",
+      desc: "Fourth-down decision-making under uncertainty requires an explicit trade-off between expected points and downside risk. Key transition and scoring parameters were estimated from historical play-by-play data, and a game-level Monte Carlo simulation was developed to compare conservative, balanced, and aggressive fourth-down policies with 95% confidence intervals. Results suggested that more aggressive policies yield a modest increase in scoring on average, but substantially increase fourth-down attempts and turnover-on-downs exposure, making the risk–reward trade-off explicit.",
       tags: ["Simulation", "Monte Carlo", "Analytics"],
       // 这个文件要在 public/ 里
-      ppt: "/SYS611_TermProject_NFL4thDown_MonteCarlo.pdf",
-      link: "https://colab.research.google.com/drive/1FrYON171XMlLIq9T_8V8JcveaYF7LTzh?usp=sharing",
+      pdf: "/SYS611_TermProject_NFL4thDown_MonteCarlo.pdf",
+      code_link: "https://colab.research.google.com/drive/1FrYON171XMlLIq9T_8V8JcveaYF7LTzh?usp=sharing",
     },
   ];
 
