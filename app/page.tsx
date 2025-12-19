@@ -98,30 +98,6 @@ export default function Home() {
           </div>
         </header>
 
-        {/* Sections */}
-        <section className="mt-14 grid gap-6 sm:grid-cols-3">
-          <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
-            <h2 className="text-sm font-semibold">Focus</h2>
-            <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
-              ML modeling, evaluation, and end-to-end pipelines that are
-              reproducible and easy to explain.
-            </p>
-          </div>
-          <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
-            <h2 className="text-sm font-semibold">Stack</h2>
-            <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
-              Python • pandas • scikit-learn • XGBoost • SQL • Excel • Git
-            </p>
-          </div>
-          <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
-            <h2 className="text-sm font-semibold">What I’m building</h2>
-            <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
-              Portfolio-ready projects and case studies with clean write-ups and
-              metrics.
-            </p>
-          </div>
-        </section>
-
         {/* Projects */}
         <section className="mt-14">
           <div className="flex items-end justify-between gap-4">
@@ -199,6 +175,30 @@ export default function Home() {
                 </div>
               );
             })}
+          </div>
+        </section>
+
+        {/* Sections */}
+        <section className="mt-14 grid gap-6 sm:grid-cols-3">
+          <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
+            <h2 className="text-sm font-semibold">Focus</h2>
+            <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+              ML modeling, evaluation, and end-to-end pipelines that are
+              reproducible and easy to explain.
+            </p>
+          </div>
+          <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
+            <h2 className="text-sm font-semibold">Stack</h2>
+            <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+              Python • pandas • scikit-learn • XGBoost • SQL • Excel • Git
+            </p>
+          </div>
+          <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
+            <h2 className="text-sm font-semibold">What I’m building</h2>
+            <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+              Portfolio-ready projects and case studies with clean write-ups and
+              metrics.
+            </p>
           </div>
         </section>
 
