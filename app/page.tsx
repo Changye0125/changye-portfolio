@@ -26,7 +26,7 @@ export default function Home() {
     },
     {
       name: "EEG / iEEG Data Standardization Pipeline",
-      desc: "Convert MAT/EDF/BDF → standardized formats + metadata + QA checks.",
+      desc: "Built the data infrastructure for a brain foundation model project by curating and harmonizing multi-source EEG/iEEG datasets: collected and cataloged corpora, converted heterogeneous raw formats (MAT/EDF/BDF) into a unified HDF5 schema, standardized channel layouts via 10–20 mapping, enforced consistent resampling/segmentation rules, and implemented automated QA/integrity checks. Delivered reproducible metadata manifests and train/val/test splits that enabled large-scale pretraining and cross-dataset evaluation, and provided model-ready artifacts for downstream EEG-to-text/captioning experiments.",
       tags: ["Python", "Data Engineering", "QA"],
       ppt: "",
       link: "",
