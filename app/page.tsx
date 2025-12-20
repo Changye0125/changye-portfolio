@@ -60,9 +60,7 @@ export default function Home() {
           </div>
 
           <p className="max-w-2xl text-base leading-7 text-zinc-700 dark:text-zinc-300">
-            I’m a Master’s student at Stevens Institute of Technology, focused on
-            engineering management and applied analytics. I build practical
-            data/ML pipelines and turn messy data into decisions.
+            Engineering Management M.Eng. candidate at Stevens (Expected Dec 2026) with a data-driven, operations-minded approach to decision-making. Experience spans EEG/iEEG preprocessing standardization (format unification, metadata, and rigorous QA checks) and machine-learning pipelines on large NFL play-by-play data with reproducible feature engineering and model evaluation. Prior internship work improved reporting timeliness and reduced manual aggregation through SOP-driven analytics pipelines and dashboarding for stakeholders.
           </p>
 
           {/* CTAs */}
