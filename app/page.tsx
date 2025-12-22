@@ -253,7 +253,7 @@ export default function Home() {
         "Reported 95% CIs to make risk–reward trade-offs explicit.",
       ],
       tags: ["Monte Carlo", "Simulation", "Analytics", "CI"],
-      image: "/images/montecarlo.webp",
+      image: "/montecarlo_16x10_1600w.webp",
       ppt: "/SYS611_TermProject_NFL4thDown_MonteCarlo.pdf",
       link: "https://colab.research.google.com/drive/1FrYON171XMlLIq9T_8V8JcveaYF7LTzh?usp=sharing",
     },
