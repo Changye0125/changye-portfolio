@@ -220,7 +220,15 @@ function Drawer({ open, onClose }: { open: boolean; onClose: () => void }) {
               <a className="block hover:text-amber-200" href="mailto:cchen90@stevens.edu">
                 cchen90@stevens.edu
               </a>
-              <a className="block hover:text-amber-200" href="https://github.com/Changye0125" target="_blank" rel="noreferrer">
+              <a
+  href={p.link}
+  target="_blank"
+  rel="noreferrer"
+  className="mt-5 block rounded-full bg-amber-300 px-6 py-3 text-center text-sm font-semibold text-black shadow-lg shadow-amber-900/25 transition hover:-translate-y-0.5 hover:bg-amber-200"
+>
+  Open →
+</a>
+
                 GitHub →
               </a>
               <a className="block hover:text-amber-200" href="/Changye_Resume.pdf">
