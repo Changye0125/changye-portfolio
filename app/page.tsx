@@ -14,19 +14,15 @@ function SwordConnect() {
         <svg viewBox="0 0 320 80" className="absolute inset-0 h-full w-full" fill="none">
           {/* ====== SHEATH (fixed) ====== */}
           <path
-            d="M22 40
-               C62 22, 132 22, 174 40
-               C132 58, 62 58, 22 40 Z"
+            d="M22 40 C62 22, 132 22, 174 40 C132 58, 62 58, 22 40 Z"
             className="fill-white/10 stroke-white/25"
             strokeWidth="2"
           />
-          {/* sheath tip */}
           <path
             d="M20 40 C16 36, 16 44, 20 40 Z"
             className="fill-white/10 stroke-white/25"
             strokeWidth="2"
           />
-          {/* small cord */}
           <path
             d="M62 28 C58 34,58 46,62 52"
             className="stroke-white/18"
@@ -35,22 +31,18 @@ function SwordConnect() {
           />
 
           {/* ====== HANDLE + GUARD (fixed) ====== */}
-          {/* guard */}
           <path
             d="M182 34 L196 34 L200 40 L196 46 L182 46 Z"
             className="fill-white/10 stroke-white/25"
             strokeWidth="2"
           />
-          {/* handle */}
           <path
             d="M200 30 L220 30 L230 40 L220 50 L200 50 Z"
             className="fill-white/10 stroke-white/25"
             strokeWidth="2"
           />
-          {/* wrap lines */}
           <path d="M206 34 L222 46" className="stroke-white/18" strokeWidth="2" strokeLinecap="round" />
           <path d="M206 46 L222 34" className="stroke-white/18" strokeWidth="2" strokeLinecap="round" />
-          {/* tassel */}
           <path
             d="M228 50 C234 58, 242 62, 250 66"
             className="stroke-emerald-200/45"
@@ -60,21 +52,18 @@ function SwordConnect() {
 
           {/* ====== BLADE (slides out on hover) ====== */}
           <g className="transition-transform duration-300 ease-out group-hover:translate-x-[36px]">
-            {/* blade line */}
             <path
               d="M196 40 L304 40"
               className="stroke-emerald-200/85"
               strokeWidth="3"
               strokeLinecap="round"
             />
-            {/* blade highlight */}
             <path
               d="M210 37 L296 37"
               className="stroke-white/35 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
               strokeWidth="1.6"
               strokeLinecap="round"
             />
-            {/* tip */}
             <path
               d="M300 32 L312 40 L300 48"
               className="stroke-emerald-200/85"
@@ -82,7 +71,6 @@ function SwordConnect() {
               strokeLinejoin="round"
               strokeLinecap="round"
             />
-            {/* “出鞘寒光” */}
             <path
               d="M252 26 L264 40 L252 54"
               className="stroke-white/30 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
@@ -93,7 +81,6 @@ function SwordConnect() {
           </g>
         </svg>
 
-        {/* hover 时一圈淡淡灵气 */}
         <span className="pointer-events-none absolute -inset-2 rounded-full opacity-0 blur-xl transition duration-300 group-hover:opacity-100 bg-[radial-gradient(circle_at_40%_40%,rgba(110,231,183,0.25),transparent_60%)]" />
       </span>
 
@@ -104,16 +91,9 @@ function SwordConnect() {
   );
 }
 
-function Drawer({
-  open,
-  onClose,
-}: {
-  open: boolean;
-  onClose: () => void;
-}) {
+function Drawer({ open, onClose }: { open: boolean; onClose: () => void }) {
   useEffect(() => {
     if (!open) return;
-
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
@@ -129,7 +109,6 @@ function Drawer({
       ].join(" ")}
       aria-hidden={!open}
     >
-      {/* overlay */}
       <div
         className={[
           "absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity",
@@ -138,7 +117,6 @@ function Drawer({
         onClick={onClose}
       />
 
-      {/* panel */}
       <aside
         className={[
           "absolute right-0 top-0 h-full w-[320px] max-w-[85vw]",
@@ -183,7 +161,12 @@ function Drawer({
               <a className="block hover:text-emerald-200" href="mailto:cchen90@stevens.edu">
                 cchen90@stevens.edu
               </a>
-              <a className="block hover:text-emerald-200" href="https://github.com/Changye0125" target="_blank" rel="noreferrer">
+              <a
+                className="block hover:text-emerald-200"
+                href="https://github.com/Changye0125"
+                target="_blank"
+                rel="noreferrer"
+              >
                 GitHub →
               </a>
               <a className="block hover:text-emerald-200" href="/Changye_Resume.pdf">
@@ -209,19 +192,16 @@ export default function Home() {
         {/* 轻微宣纸光晕 */}
         <div className="cloudHaze" />
 
-        {/* 云海层（纯CSS） */}
+        {/* 云海层（纯CSS，兼容写法） */}
         <div className="cloudLayer cloud1" />
         <div className="cloudLayer cloud2" />
         <div className="cloudLayer cloud3" />
 
-        {/* 顶部也来一点点雾气（可删） */}
+        {/* 顶部一点淡云 */}
         <div className="cloudTop" />
 
         {/* 底部暗角 */}
         <div className="absolute inset-x-0 bottom-0 h-[45vh] bg-[linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,0.55))]" />
-
-        {/* 轻颗粒（质感） */}
-        <div className="grain" />
       </div>
 
       {/* 右上角：剑 + 汉堡 */}
@@ -241,10 +221,9 @@ export default function Home() {
         </button>
       </header>
 
-      {/* Drawer */}
       <Drawer open={open} onClose={() => setOpen(false)} />
 
-      {/* 中心：两行大字 */}
+      {/* 正中：两行大字 */}
       <section className="grid min-h-screen place-items-center px-6">
         <div className="text-center">
           <h1 className="text-balance text-5xl font-semibold leading-[1.02] md:text-7xl">
@@ -282,18 +261,18 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 下面先放三个占位段落，防止锚点跳转没内容 */}
+      {/* 占位锚点区 */}
       <section id="projects" className="mx-auto max-w-5xl px-6 py-20">
         <h2 className="text-xl font-semibold text-white">Projects</h2>
         <p className="mt-3 text-white/70 text-sm leading-6">
-          这里下一步我们放你的项目卡片（会做成更仙侠的卷轴/玉牌风格）。
+          下一步把项目卡片做成“玉牌/卷轴”风格。
         </p>
       </section>
 
       <section id="about" className="mx-auto max-w-5xl px-6 py-20">
         <h2 className="text-xl font-semibold text-white">About</h2>
         <p className="mt-3 text-white/70 text-sm leading-6">
-          这里写一段“我的道途/我能解决什么问题”，配一点技能符箓标签。
+          下一步把这里做成“道途简介 + 技能符箓”。
         </p>
       </section>
 
@@ -307,7 +286,7 @@ export default function Home() {
         </p>
       </section>
 
-      {/* 云/质感 CSS（先放这里，满意后我再带你移到 globals.css） */}
+      {/* 云 CSS：用标准 stop 写法，避免构建器报错 */}
       <style jsx global>{`
         .cloudHaze {
           position: absolute;
@@ -319,29 +298,29 @@ export default function Home() {
           opacity: 0.75;
         }
 
-        /* 真的“云带”层：多团 radial 叠出来 */
         .cloudLayer {
           position: absolute;
           left: -35%;
           width: 170%;
           bottom: -14vh;
           height: 62vh;
-          background: radial-gradient(circle at 6% 70%, rgba(255, 255, 255, 0.22) 0 28%, transparent 29%),
-            radial-gradient(circle at 16% 72%, rgba(255, 255, 255, 0.2) 0 32%, transparent 33%),
-            radial-gradient(circle at 28% 66%, rgba(255, 255, 255, 0.18) 0 30%, transparent 31%),
-            radial-gradient(circle at 40% 74%, rgba(255, 255, 255, 0.22) 0 36%, transparent 37%),
-            radial-gradient(circle at 52% 68%, rgba(255, 255, 255, 0.2) 0 33%, transparent 34%),
-            radial-gradient(circle at 64% 76%, rgba(255, 255, 255, 0.18) 0 38%, transparent 39%),
-            radial-gradient(circle at 76% 70%, rgba(255, 255, 255, 0.22) 0 34%, transparent 35%),
-            radial-gradient(circle at 88% 74%, rgba(255, 255, 255, 0.18) 0 40%, transparent 41%),
-            linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(0, 0, 0, 0));
           opacity: 0.55;
           filter: blur(10px);
           transform: translate3d(0, 0, 0);
           animation: cloudDrift linear infinite;
+
+          background:
+            radial-gradient(circle at 6% 70%,  rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.22) 28%, transparent 29%),
+            radial-gradient(circle at 16% 72%, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0.20) 32%, transparent 33%),
+            radial-gradient(circle at 28% 66%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.18) 30%, transparent 31%),
+            radial-gradient(circle at 40% 74%, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.22) 36%, transparent 37%),
+            radial-gradient(circle at 52% 68%, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0.20) 33%, transparent 34%),
+            radial-gradient(circle at 64% 76%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.18) 38%, transparent 39%),
+            radial-gradient(circle at 76% 70%, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.22) 34%, transparent 35%),
+            radial-gradient(circle at 88% 74%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.18) 40%, transparent 41%),
+            linear-gradient(180deg, rgba(255,255,255,0.12), rgba(0,0,0,0));
         }
 
-        /* 三层不同速度/高度/模糊 = 立体感 */
         .cloud1 {
           bottom: -18vh;
           opacity: 0.5;
@@ -363,15 +342,9 @@ export default function Home() {
         }
 
         @keyframes cloudDrift {
-          0% {
-            transform: translate3d(-2.5%, 0, 0);
-          }
-          50% {
-            transform: translate3d(2.5%, -1.2%, 0);
-          }
-          100% {
-            transform: translate3d(-2.5%, 0, 0);
-          }
+          0% { transform: translate3d(-2.5%, 0, 0); }
+          50% { transform: translate3d( 2.5%, -1.2%, 0); }
+          100% { transform: translate3d(-2.5%, 0, 0); }
         }
 
         .cloudTop {
@@ -382,41 +355,24 @@ export default function Home() {
           height: 40vh;
           opacity: 0.22;
           filter: blur(14px);
-          background: radial-gradient(circle at 10% 60%, rgba(255, 255, 255, 0.18) 0 26%, transparent 27%),
-            radial-gradient(circle at 28% 40%, rgba(255, 255, 255, 0.14) 0 30%, transparent 31%),
-            radial-gradient(circle at 55% 55%, rgba(255, 255, 255, 0.14) 0 34%, transparent 35%),
-            radial-gradient(circle at 80% 45%, rgba(255, 255, 255, 0.16) 0 30%, transparent 31%);
-          animation: cloudTopDrift 46s ease-in-out infinite;
           transform: translate3d(0, 0, 0);
+          animation: cloudTopDrift 46s ease-in-out infinite;
+
+          background:
+            radial-gradient(circle at 10% 60%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.18) 26%, transparent 27%),
+            radial-gradient(circle at 28% 40%, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.14) 30%, transparent 31%),
+            radial-gradient(circle at 55% 55%, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.14) 34%, transparent 35%),
+            radial-gradient(circle at 80% 45%, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.16) 30%, transparent 31%);
         }
 
         @keyframes cloudTopDrift {
-          0% {
-            transform: translate3d(1.5%, 0, 0);
-          }
-          50% {
-            transform: translate3d(-1.5%, 1%, 0);
-          }
-          100% {
-            transform: translate3d(1.5%, 0, 0);
-          }
-        }
-
-        .grain {
-          position: absolute;
-          inset: 0;
-          opacity: 0.06;
-          mix-blend-mode: overlay;
-          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
-          background-size: 260px 260px;
-          pointer-events: none;
+          0% { transform: translate3d(1.5%, 0, 0); }
+          50% { transform: translate3d(-1.5%, 1%, 0); }
+          100% { transform: translate3d(1.5%, 0, 0); }
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .cloudLayer,
-          .cloudTop {
-            animation: none !important;
-          }
+          .cloudLayer, .cloudTop { animation: none !important; }
         }
       `}</style>
     </main>
