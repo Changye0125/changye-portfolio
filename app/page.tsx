@@ -10,70 +10,84 @@ function SwordConnect() {
       aria-label="Connect me"
       title="Connect me"
     >
-      <span className="relative h-10 w-[168px]">
-        <svg viewBox="0 0 320 80" className="absolute inset-0 h-full w-full" fill="none">
-          {/* ====== SHEATH (fixed) ====== */}
+      <span className="relative h-10 w-[180px]">
+        <svg
+          viewBox="0 0 360 90"
+          className="absolute inset-0 h-full w-full"
+          fill="none"
+        >
+          {/* 鞘 */}
           <path
-            d="M22 40 C62 22, 132 22, 174 40 C132 58, 62 58, 22 40 Z"
+            d="M22 45 C70 18, 160 18, 205 45 C160 72, 70 72, 22 45 Z"
             className="fill-white/10 stroke-white/25"
             strokeWidth="2"
           />
+          {/* 鞘尖 */}
           <path
-            d="M20 40 C16 36, 16 44, 20 40 Z"
+            d="M20 45 C14 40, 14 50, 20 45 Z"
             className="fill-white/10 stroke-white/25"
             strokeWidth="2"
           />
+          {/* 护手 */}
           <path
-            d="M62 28 C58 34,58 46,62 52"
+            d="M214 36 L234 36 L240 45 L234 54 L214 54 Z"
+            className="fill-white/10 stroke-white/25"
+            strokeWidth="2"
+          />
+          {/* 剑柄 */}
+          <path
+            d="M240 32 L266 32 L280 45 L266 58 L240 58 Z"
+            className="fill-white/10 stroke-white/25"
+            strokeWidth="2"
+          />
+          {/* 缠绕 */}
+          <path
+            d="M246 38 L268 52"
             className="stroke-white/18"
             strokeWidth="2"
             strokeLinecap="round"
           />
-
-          {/* ====== HANDLE + GUARD (fixed) ====== */}
           <path
-            d="M182 34 L196 34 L200 40 L196 46 L182 46 Z"
-            className="fill-white/10 stroke-white/25"
+            d="M246 52 L268 38"
+            className="stroke-white/18"
             strokeWidth="2"
+            strokeLinecap="round"
           />
+          {/* 穗子 */}
           <path
-            d="M200 30 L220 30 L230 40 L220 50 L200 50 Z"
-            className="fill-white/10 stroke-white/25"
-            strokeWidth="2"
-          />
-          <path d="M206 34 L222 46" className="stroke-white/18" strokeWidth="2" strokeLinecap="round" />
-          <path d="M206 46 L222 34" className="stroke-white/18" strokeWidth="2" strokeLinecap="round" />
-          <path
-            d="M228 50 C234 58, 242 62, 250 66"
-            className="stroke-emerald-200/45"
+            d="M278 58 C286 66, 296 72, 306 78"
+            className="stroke-emerald-200/50"
             strokeWidth="2"
             strokeLinecap="round"
           />
 
-          {/* ====== BLADE (slides out on hover) ====== */}
-          <g className="transition-transform duration-300 ease-out group-hover:translate-x-[36px]">
+          {/* 剑身：hover 出鞘 */}
+          <g className="transition-transform duration-300 ease-out group-hover:translate-x-[42px]">
             <path
-              d="M196 40 L304 40"
+              d="M234 45 L338 45"
               className="stroke-emerald-200/85"
               strokeWidth="3"
               strokeLinecap="round"
             />
+            {/* 高光 */}
             <path
-              d="M210 37 L296 37"
+              d="M248 42 L328 42"
               className="stroke-white/35 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
               strokeWidth="1.6"
               strokeLinecap="round"
             />
+            {/* 剑尖 */}
             <path
-              d="M300 32 L312 40 L300 48"
+              d="M334 36 L350 45 L334 54"
               className="stroke-emerald-200/85"
               strokeWidth="3"
               strokeLinejoin="round"
               strokeLinecap="round"
             />
+            {/* 寒光一闪 */}
             <path
-              d="M252 26 L264 40 L252 54"
-              className="stroke-white/30 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+              d="M290 28 L304 45 L290 62"
+              className="stroke-white/28 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
               strokeWidth="2"
               strokeLinejoin="round"
               strokeLinecap="round"
@@ -81,7 +95,8 @@ function SwordConnect() {
           </g>
         </svg>
 
-        <span className="pointer-events-none absolute -inset-2 rounded-full opacity-0 blur-xl transition duration-300 group-hover:opacity-100 bg-[radial-gradient(circle_at_40%_40%,rgba(110,231,183,0.25),transparent_60%)]" />
+        {/* 淡淡灵气光晕（不用复杂 gradient） */}
+        <span className="pointer-events-none absolute -inset-2 rounded-full opacity-0 blur-xl transition duration-300 group-hover:opacity-100 bg-emerald-400/15" />
       </span>
 
       <span className="text-xs tracking-[0.34em] text-white/70 group-hover:text-emerald-200">
@@ -94,9 +109,7 @@ function SwordConnect() {
 function Drawer({ open, onClose }: { open: boolean; onClose: () => void }) {
   useEffect(() => {
     if (!open) return;
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
+    const onKeyDown = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [open, onClose]);
@@ -111,7 +124,7 @@ function Drawer({ open, onClose }: { open: boolean; onClose: () => void }) {
     >
       <div
         className={[
-          "absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity",
+          "absolute inset-0 bg-black/55 backdrop-blur-sm transition-opacity",
           open ? "opacity-100" : "opacity-0",
         ].join(" ")}
         onClick={onClose}
@@ -120,7 +133,7 @@ function Drawer({ open, onClose }: { open: boolean; onClose: () => void }) {
       <aside
         className={[
           "absolute right-0 top-0 h-full w-[320px] max-w-[85vw]",
-          "border-l border-white/12 bg-[#070b1a]/70 backdrop-blur-xl",
+          "border-l border-white/12 bg-[#070b1a]/75 backdrop-blur-xl",
           "shadow-[0_30px_120px_rgba(0,0,0,0.6)]",
           "transition-transform duration-300 ease-out",
           open ? "translate-x-0" : "translate-x-full",
@@ -147,7 +160,7 @@ function Drawer({ open, onClose }: { open: boolean; onClose: () => void }) {
               key={href}
               href={href}
               onClick={onClose}
-              className="block rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3 text-sm text-white/80 hover:bg-white/[0.08] hover:text-emerald-200 transition"
+              className="block rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-3 text-sm text-white/80 hover:bg-white/[0.10] hover:text-emerald-200 transition"
             >
               {t}
             </a>
@@ -155,7 +168,7 @@ function Drawer({ open, onClose }: { open: boolean; onClose: () => void }) {
         </nav>
 
         <div className="px-5 pt-2 pb-6 text-xs text-white/55">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.05] p-4">
+          <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-4">
             <div className="text-white/70">Quick links</div>
             <div className="mt-3 space-y-2">
               <a className="block hover:text-emerald-200" href="mailto:cchen90@stevens.edu">
@@ -180,28 +193,52 @@ function Drawer({ open, onClose }: { open: boolean; onClose: () => void }) {
   );
 }
 
+function CloudBand({ variant }: { variant: "far" | "mid" | "near" }) {
+  // 纯 SVG 云团：比复杂 CSS gradient 更稳（Vercel 不炸）
+  return (
+    <div className={`cloud cloud-${variant}`} aria-hidden="true">
+      <svg viewBox="0 0 1200 260" className="h-full w-full" fill="none">
+        <defs>
+          <filter id="blur">
+            <feGaussianBlur stdDeviation="18" />
+          </filter>
+        </defs>
+
+        <g filter="url(#blur)">
+          {/* 云团（多椭圆叠加） */}
+          <ellipse cx="120" cy="170" rx="180" ry="70" fill="white" fillOpacity="0.35" />
+          <ellipse cx="270" cy="160" rx="220" ry="85" fill="white" fillOpacity="0.32" />
+          <ellipse cx="460" cy="175" rx="240" ry="90" fill="white" fillOpacity="0.30" />
+          <ellipse cx="660" cy="160" rx="260" ry="92" fill="white" fillOpacity="0.28" />
+          <ellipse cx="860" cy="178" rx="240" ry="88" fill="white" fillOpacity="0.30" />
+          <ellipse cx="1030" cy="165" rx="210" ry="80" fill="white" fillOpacity="0.32" />
+
+          {/* 云底铺一层，避免断裂 */}
+          <rect x="0" y="160" width="1200" height="120" fill="white" fillOpacity="0.18" />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
 export default function Home() {
   const [open, setOpen] = useState(false);
 
   return (
     <main id="top" className="relative min-h-screen overflow-hidden text-white">
-      {/* 背景：宣纸夜色 + 云海 */}
+      {/* 背景底色 */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-gradient-to-b from-[#070b1a] via-[#08142a] to-[#04060d]" />
+        {/* 淡淡宣纸雾 */}
+        <div className="absolute inset-0 opacity-60 bg-gradient-to-b from-white/10 via-transparent to-black/30" />
 
-        {/* 轻微宣纸光晕 */}
-        <div className="cloudHaze" />
-
-        {/* 云海层（纯CSS，兼容写法） */}
-        <div className="cloudLayer cloud1" />
-        <div className="cloudLayer cloud2" />
-        <div className="cloudLayer cloud3" />
-
-        {/* 顶部一点淡云 */}
-        <div className="cloudTop" />
+        {/* 云层（3层不同速度/高度/模糊） */}
+        <CloudBand variant="far" />
+        <CloudBand variant="mid" />
+        <CloudBand variant="near" />
 
         {/* 底部暗角 */}
-        <div className="absolute inset-x-0 bottom-0 h-[45vh] bg-[linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,0.55))]" />
+        <div className="absolute inset-x-0 bottom-0 h-[45vh] bg-gradient-to-b from-transparent to-black/60" />
       </div>
 
       {/* 右上角：剑 + 汉堡 */}
@@ -223,29 +260,29 @@ export default function Home() {
 
       <Drawer open={open} onClose={() => setOpen(false)} />
 
-      {/* 正中：两行大字 */}
+      {/* 正中两行大字 */}
       <section className="grid min-h-screen place-items-center px-6">
         <div className="text-center">
-          <h1 className="text-balance text-5xl font-semibold leading-[1.02] md:text-7xl">
-            <span className="block bg-gradient-to-b from-emerald-100 via-white to-violet-100 bg-clip-text text-transparent drop-shadow-[0_18px_70px_rgba(0,0,0,0.55)]">
+          <h1 className="text-balance text-5xl font-semibold leading-[1.02] md:text-7xl drop-shadow-2xl">
+            <span className="block bg-gradient-to-b from-emerald-100 via-white to-violet-100 bg-clip-text text-transparent">
               Make It Work.
             </span>
-            <span className="mt-2 block bg-gradient-to-b from-emerald-100 via-white to-violet-100 bg-clip-text text-transparent drop-shadow-[0_18px_70px_rgba(0,0,0,0.55)]">
+            <span className="mt-2 block bg-gradient-to-b from-emerald-100 via-white to-violet-100 bg-clip-text text-transparent">
               Make It Scale.
             </span>
           </h1>
 
           <p className="mt-6 text-xs tracking-[0.34em] text-white/60">
-            XIANXIA LANDING · NEXT.JS · 2D CLOUD MOTION
+            XIANXIA LANDING · 2D CLOUD MOTION
           </p>
 
           <div className="mt-10 flex justify-center gap-3">
             <a
               href="#projects"
               className="inline-flex h-11 items-center justify-center rounded-full px-6 text-sm font-semibold
-                         bg-gradient-to-b from-emerald-100 via-emerald-200 to-emerald-400 text-[#041012]
+                         bg-emerald-200 text-[#041012]
                          shadow-[0_18px_55px_rgba(0,0,0,0.35)]
-                         transition hover:-translate-y-0.5 hover:brightness-[1.03] active:translate-y-0"
+                         transition hover:-translate-y-0.5 hover:brightness-105 active:translate-y-0"
             >
               Enter
             </a>
@@ -261,18 +298,18 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 占位锚点区 */}
+      {/* 锚点占位 */}
       <section id="projects" className="mx-auto max-w-5xl px-6 py-20">
         <h2 className="text-xl font-semibold text-white">Projects</h2>
         <p className="mt-3 text-white/70 text-sm leading-6">
-          下一步把项目卡片做成“玉牌/卷轴”风格。
+          下一步：项目卡片做成“玉牌/卷轴”风格。
         </p>
       </section>
 
       <section id="about" className="mx-auto max-w-5xl px-6 py-20">
         <h2 className="text-xl font-semibold text-white">About</h2>
         <p className="mt-3 text-white/70 text-sm leading-6">
-          下一步把这里做成“道途简介 + 技能符箓”。
+          下一步：道途简介 + 技能符箓。
         </p>
       </section>
 
@@ -285,96 +322,6 @@ export default function Home() {
           </a>
         </p>
       </section>
-
-      {/* 云 CSS：用标准 stop 写法，避免构建器报错 */}
-      <style jsx global>{`
-        .cloudHaze {
-          position: absolute;
-          inset: 0;
-          background: radial-gradient(ellipse at 35% 25%, rgba(255, 255, 255, 0.1), transparent 60%),
-            radial-gradient(ellipse at 70% 30%, rgba(255, 255, 255, 0.08), transparent 62%),
-            radial-gradient(ellipse at 50% 70%, rgba(255, 255, 255, 0.06), transparent 60%);
-          filter: blur(2px);
-          opacity: 0.75;
-        }
-
-        .cloudLayer {
-          position: absolute;
-          left: -35%;
-          width: 170%;
-          bottom: -14vh;
-          height: 62vh;
-          opacity: 0.55;
-          filter: blur(10px);
-          transform: translate3d(0, 0, 0);
-          animation: cloudDrift linear infinite;
-
-          background:
-            radial-gradient(circle at 6% 70%,  rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.22) 28%, transparent 29%),
-            radial-gradient(circle at 16% 72%, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0.20) 32%, transparent 33%),
-            radial-gradient(circle at 28% 66%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.18) 30%, transparent 31%),
-            radial-gradient(circle at 40% 74%, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.22) 36%, transparent 37%),
-            radial-gradient(circle at 52% 68%, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0.20) 33%, transparent 34%),
-            radial-gradient(circle at 64% 76%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.18) 38%, transparent 39%),
-            radial-gradient(circle at 76% 70%, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.22) 34%, transparent 35%),
-            radial-gradient(circle at 88% 74%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.18) 40%, transparent 41%),
-            linear-gradient(180deg, rgba(255,255,255,0.12), rgba(0,0,0,0));
-        }
-
-        .cloud1 {
-          bottom: -18vh;
-          opacity: 0.5;
-          filter: blur(14px);
-          animation-duration: 38s;
-        }
-        .cloud2 {
-          bottom: -12vh;
-          opacity: 0.62;
-          filter: blur(10px);
-          animation-duration: 28s;
-          animation-direction: reverse;
-        }
-        .cloud3 {
-          bottom: -8vh;
-          opacity: 0.4;
-          filter: blur(18px);
-          animation-duration: 52s;
-        }
-
-        @keyframes cloudDrift {
-          0% { transform: translate3d(-2.5%, 0, 0); }
-          50% { transform: translate3d( 2.5%, -1.2%, 0); }
-          100% { transform: translate3d(-2.5%, 0, 0); }
-        }
-
-        .cloudTop {
-          position: absolute;
-          left: -20%;
-          top: -18vh;
-          width: 140%;
-          height: 40vh;
-          opacity: 0.22;
-          filter: blur(14px);
-          transform: translate3d(0, 0, 0);
-          animation: cloudTopDrift 46s ease-in-out infinite;
-
-          background:
-            radial-gradient(circle at 10% 60%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.18) 26%, transparent 27%),
-            radial-gradient(circle at 28% 40%, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.14) 30%, transparent 31%),
-            radial-gradient(circle at 55% 55%, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.14) 34%, transparent 35%),
-            radial-gradient(circle at 80% 45%, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.16) 30%, transparent 31%);
-        }
-
-        @keyframes cloudTopDrift {
-          0% { transform: translate3d(1.5%, 0, 0); }
-          50% { transform: translate3d(-1.5%, 1%, 0); }
-          100% { transform: translate3d(1.5%, 0, 0); }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .cloudLayer, .cloudTop { animation: none !important; }
-        }
-      `}</style>
     </main>
   );
 }
