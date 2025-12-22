@@ -148,8 +148,8 @@ function SigilChip({ children }: { children: React.ReactNode }) {
   );
 }
 
-/** Sword link (wuxia vibe, still readable for recruiters) */
-function SwordConnect() {
+/** Better: interactive flying-sword glyph (clearly reads as a sword) */
+function FlyingSwordConnect() {
   return (
     <a
       href="#contact"
@@ -159,71 +159,82 @@ function SwordConnect() {
     >
       <span className="relative h-10 w-[210px]">
         <svg viewBox="0 0 420 90" className="absolute inset-0 h-full w-full" fill="none">
-          {/* sheath */}
+          {/* glow trail */}
           <path
-            d="M22 45 C86 16, 200 16, 250 45 C200 74, 86 74, 22 45 Z"
-            className="fill-white/10 stroke-white/22"
-            strokeWidth="2"
-          />
-          {/* sheath cap */}
-          <path
-            d="M22 45 C10 38, 10 52, 22 45 Z"
-            className="fill-white/10 stroke-white/22"
-            strokeWidth="2"
-          />
-          {/* guard */}
-          <path
-            d="M258 33 L286 33 L296 45 L286 57 L258 57 Z"
-            className="fill-white/10 stroke-white/22"
-            strokeWidth="2"
-          />
-          {/* handle */}
-          <path
-            d="M296 28 L328 28 L350 45 L328 62 L296 62 Z"
-            className="fill-white/10 stroke-white/22"
-            strokeWidth="2"
-          />
-          {/* wrap lines */}
-          <path d="M304 36 L334 54" className="stroke-white/18" strokeWidth="2" strokeLinecap="round" />
-          <path d="M304 54 L334 36" className="stroke-white/18" strokeWidth="2" strokeLinecap="round" />
-          {/* tassel */}
-          <path
-            d="M348 62 C362 72, 376 78, 396 84"
-            className="stroke-amber-200/55"
-            strokeWidth="2"
+            d="M26 58 C90 28, 150 18, 214 30 C256 38, 290 56, 338 54"
+            className="stroke-amber-200/0 group-hover:stroke-amber-200/35"
+            strokeWidth="4"
             strokeLinecap="round"
+            strokeLinejoin="round"
           />
 
-          {/* blade group: slides out on hover */}
-          <g className="transition-transform duration-300 ease-out group-hover:translate-x-[56px]">
-            {/* spine */}
-            <path d="M286 45 L402 45" className="stroke-amber-200/85" strokeWidth="3" strokeLinecap="round" />
-            {/* edge highlight */}
+          {/* scabbard (reads more like a sheath now) */}
+          <path
+            d="M34 46 L188 34 Q206 33 214 45 Q206 57 188 56 L34 44 Z"
+            className="fill-white/10 stroke-white/22"
+            strokeWidth="2"
+            strokeLinejoin="round"
+          />
+          {/* scabbard mouth */}
+          <path
+            d="M188 34 L204 32 Q212 32 216 38 L206 45 L214 52 Q212 58 204 58 L188 56"
+            className="fill-white/10 stroke-white/22"
+            strokeWidth="2"
+            strokeLinejoin="round"
+          />
+
+          {/* sword group (flies forward on hover) */}
+          <g className="transition-transform duration-300 ease-out group-hover:translate-x-[52px] group-hover:-translate-y-[2px]">
+            {/* guard */}
             <path
-              d="M292 41 L394 41"
-              className="stroke-white/35 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+              d="M214 42 L242 36 L252 45 L242 54 L214 48 Z"
+              className="fill-white/10 stroke-white/22"
+              strokeWidth="2"
+              strokeLinejoin="round"
+            />
+            {/* handle */}
+            <path
+              d="M200 38 L214 36 L218 45 L214 54 L200 52 Z"
+              className="fill-white/10 stroke-white/22"
+              strokeWidth="2"
+              strokeLinejoin="round"
+            />
+            {/* pommel */}
+            <circle cx="198" cy="45" r="4.5" className="fill-white/10 stroke-white/22" strokeWidth="2" />
+
+            {/* blade */}
+            <path
+              d="M252 45 L392 45"
+              className="stroke-amber-200/90"
+              strokeWidth="3.2"
+              strokeLinecap="round"
+            />
+            {/* blade ridge */}
+            <path
+              d="M258 41.5 L384 41.5"
+              className="stroke-white/0 group-hover:stroke-white/30 transition"
               strokeWidth="1.6"
               strokeLinecap="round"
             />
-            {/* tip */}
+            {/* tip (diamond-ish, less arrow-like) */}
             <path
-              d="M396 34 L412 45 L396 56"
-              className="stroke-amber-200/85"
-              strokeWidth="3"
+              d="M392 45 L404 38 L414 45 L404 52 Z"
+              className="fill-amber-200/30 stroke-amber-200/90"
+              strokeWidth="2.6"
               strokeLinejoin="round"
-              strokeLinecap="round"
             />
-            {/* flowing shine */}
+
+            {/* tassel */}
             <path
-              d="M300 49 L392 49"
-              className="bladeShine stroke-white/0 group-hover:stroke-white/25"
+              d="M196 52 C182 62, 170 70, 154 76"
+              className="stroke-amber-200/60"
               strokeWidth="2"
               strokeLinecap="round"
             />
           </g>
         </svg>
 
-        {/* glow */}
+        {/* hover glow */}
         <span className="pointer-events-none absolute -inset-2 rounded-full opacity-0 blur-xl transition duration-300 group-hover:opacity-100 bg-amber-300/15" />
       </span>
 
@@ -268,7 +279,6 @@ function Drawer({ open, onClose }: { open: boolean; onClose: () => void }) {
           </button>
         </div>
 
-        {/* (you said: menu buttons don't need to change) */}
         <nav className="px-5 py-5 space-y-2">
           {[
             ["Home", "#top"],
@@ -302,6 +312,14 @@ function Drawer({ open, onClose }: { open: boolean; onClose: () => void }) {
               >
                 GitHub →
               </a>
+              <a
+                className="block hover:text-amber-200"
+                href="https://www.linkedin.com/in/changye-chen-a61746383/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                LinkedIn →
+              </a>
               <a className="block hover:text-amber-200" href="/Changye_Resume.pdf">
                 Resume →
               </a>
@@ -323,7 +341,7 @@ function TopNav({ onOpen }: { onOpen: () => void }) {
         </a>
 
         <div className="flex items-center gap-3">
-          <SwordConnect />
+          <FlyingSwordConnect />
 
           <button
             type="button"
@@ -442,10 +460,9 @@ function Hero() {
               <SigilChip>Clear deliverables</SigilChip>
             </div>
 
-            <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center md:justify-start">
+            {/* Home: keep only one CTA (Enter). Remove Email/Resume per your request */}
+            <div className="mt-8 flex justify-center md:justify-start">
               <PrimaryButton href="#projects">Enter</PrimaryButton>
-              <GhostButton href="mailto:cchen90@stevens.edu">Email</GhostButton>
-              <GhostButton href="/Changye_Resume.pdf">Resume</GhostButton>
             </div>
 
             <div className="mt-10">
@@ -511,29 +528,6 @@ function Hero() {
           background: rgba(0, 0, 0, 0.22);
           padding: 12px;
           backdrop-filter: blur(10px);
-        }
-
-        /* blade shine */
-        .bladeShine {
-          stroke-dasharray: 24 120;
-          stroke-dashoffset: 120;
-          transition: stroke 0.3s ease;
-        }
-        a.group:hover .bladeShine {
-          animation: bladeSweep 0.75s ease-out 1;
-        }
-        @keyframes bladeSweep {
-          0% {
-            stroke-dashoffset: 120;
-            opacity: 0;
-          }
-          30% {
-            opacity: 1;
-          }
-          100% {
-            stroke-dashoffset: 0;
-            opacity: 0;
-          }
         }
 
         /* mist sheets (cheap & stable) */
@@ -647,7 +641,7 @@ function ProjectCard({ p }: { p: Project }) {
 
         <div className="mt-6 flex flex-wrap gap-2">
           {p.links.map((l) => {
-            const isPrimary = l.variant === "primary";
+            // per your request: ALL buttons here should be yellow like "Open"
             return (
               <a
                 key={l.href}
@@ -655,10 +649,9 @@ function ProjectCard({ p }: { p: Project }) {
                 target={l.external ? "_blank" : undefined}
                 rel={l.external ? "noreferrer" : undefined}
                 className={clsx(
-                  "inline-flex h-11 items-center justify-center rounded-full px-5 text-sm font-semibold transition hover:-translate-y-0.5 active:translate-y-0",
-                  isPrimary
-                    ? "bg-amber-300 text-black shadow-lg shadow-amber-900/25 hover:bg-amber-200"
-                    : "border border-white/16 bg-white/8 text-white hover:bg-white/12"
+                  "inline-flex h-11 items-center justify-center rounded-full px-5 text-sm font-semibold",
+                  "bg-amber-300 text-black shadow-lg shadow-amber-900/25",
+                  "transition hover:-translate-y-0.5 hover:bg-amber-200 active:translate-y-0"
                 )}
               >
                 {l.label}
@@ -784,12 +777,20 @@ function ContactSection() {
             solid outputs.
           </p>
 
+          {/* per your request: make Download + GitHub yellow like Open */}
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <PrimaryButton href="mailto:cchen90@stevens.edu">Email me</PrimaryButton>
-            <GhostButton href="/Changye_Resume.pdf">Download resume</GhostButton>
-            <GhostButton href="https://github.com/Changye0125" target="_blank" rel="noreferrer">
+            <PrimaryButton href="/Changye_Resume.pdf">Download resume</PrimaryButton>
+            <PrimaryButton href="https://github.com/Changye0125" target="_blank" rel="noreferrer">
               GitHub
-            </GhostButton>
+            </PrimaryButton>
+            <PrimaryButton
+              href="https://www.linkedin.com/in/changye-chen-a61746383/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              LinkedIn
+            </PrimaryButton>
           </div>
 
           <div className="mt-7 text-sm text-white/70">
@@ -830,10 +831,9 @@ export default function Page() {
         {
           label: "Open Colab",
           href: "https://colab.research.google.com/drive/1cXyP8DP4dS2wa59tvASfKJl5-3Zb9NL6?usp=sharing",
-          variant: "primary",
           external: true,
         },
-        { label: "Download PPTX", href: em624Pptx, variant: "ghost" },
+        { label: "Download PPTX", href: em624Pptx },
       ],
     },
     {
@@ -850,10 +850,9 @@ export default function Page() {
         {
           label: "Open Colab",
           href: "https://colab.research.google.com/drive/1FrYON171XMlLIq9T_8V8JcveaYF7LTzh?usp=sharing",
-          variant: "primary",
           external: true,
         },
-        { label: "Download PDF", href: sys611Pdf, variant: "ghost" },
+        { label: "Download PDF", href: sys611Pdf },
       ],
     },
     {
@@ -866,7 +865,7 @@ export default function Page() {
       ],
       tags: ["Data Engineering", "HDF5", "Metadata", "QA"],
       image: "",
-      links: [{ label: "Details (on request)", href: "#contact", variant: "primary" }],
+      links: [{ label: "Details (on request)", href: "#contact" }],
     },
   ];
 
