@@ -803,7 +803,7 @@ export default function Page() {
 
   const projects: Project[] = [
     {
-      name: "NFL Play-by-Play ML Pipeline (EM624)",
+      name: "NFL Play-by-Play ML Pipeline",
       tagline: "Leakage-safe features, strong baselines, and interpretable outputs.",
       summary: [
         "Built a leakage-safe feature pipeline using recent-form matchup trends.",
@@ -822,7 +822,7 @@ export default function Page() {
       ],
     },
     {
-      name: "Monte Carlo Strategy Simulation (SYS611)",
+      name: "Monte Carlo Strategy Simulation",
       tagline: "Compare policies with confidence intervals and explicit uncertainty.",
       summary: [
         "Estimated transition/scoring parameters from historical play-by-play data.",
