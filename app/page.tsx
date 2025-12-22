@@ -148,8 +148,8 @@ function SigilChip({ children }: { children: React.ReactNode }) {
   );
 }
 
-/** Better: interactive flying-sword glyph (clearly reads as a sword) */
-function FlyingSwordConnect() {
+/** Top-right: animated gear icon (idle spin + faster on hover) */
+function GearConnect() {
   return (
     <a
       href="#contact"
@@ -157,88 +157,38 @@ function FlyingSwordConnect() {
       aria-label="Connect"
       title="Connect"
     >
-      <span className="relative h-10 w-[210px]">
-        <svg viewBox="0 0 420 90" className="absolute inset-0 h-full w-full" fill="none">
-          {/* glow trail */}
+      <span className="relative grid h-10 w-10 place-items-center rounded-full border border-white/15 bg-white/5 backdrop-blur transition group-hover:bg-white/10">
+        <svg
+          viewBox="0 0 64 64"
+          className="gearIcon h-5 w-5"
+          fill="none"
+          aria-hidden="true"
+        >
+          {/* outer teeth */}
           <path
-            d="M26 58 C90 28, 150 18, 214 30 C256 38, 290 56, 338 54"
-            className="stroke-amber-200/0 group-hover:stroke-amber-200/35"
-            strokeWidth="4"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-
-          {/* scabbard (reads more like a sheath now) */}
-          <path
-            d="M34 46 L188 34 Q206 33 214 45 Q206 57 188 56 L34 44 Z"
-            className="fill-white/10 stroke-white/22"
+            d="M36.9 6.6 40 9.5l4.5-1.2 2.8 4-2.3 4.1 2.6 3.9 4.7.6.5 4.9-4.3 2.1.1 4.6 4 2.5-1.7 4.6-4.7-.3-2.6 3.7 2 4.2-3.7 3.2-4-2.4-3.8 2.3.2 4.7-4.7 1.6-2.4-4-4.6.1-2.1 4.3-4.9-.5-.6-4.7-3.9-2.6-4.1 2.3-4-2.8 1.2-4.5-2.9-3.1-4.6 1.7-1.6-4.7 4-2.4-.1-4.6-4.3-2.1.5-4.9 4.7-.6 2.6-3.9-2.3-4.1 2.8-4 4.5 1.2 3.1-2.9 3.9 2.6 4.6-.1Z"
+            className="fill-white/10 stroke-amber-200/70"
             strokeWidth="2"
             strokeLinejoin="round"
           />
-          {/* scabbard mouth */}
-          <path
-            d="M188 34 L204 32 Q212 32 216 38 L206 45 L214 52 Q212 58 204 58 L188 56"
-            className="fill-white/10 stroke-white/22"
+          {/* inner ring */}
+          <circle
+            cx="32"
+            cy="32"
+            r="10.5"
+            className="stroke-white/35"
             strokeWidth="2"
-            strokeLinejoin="round"
           />
-
-          {/* sword group (flies forward on hover) */}
-          <g className="transition-transform duration-300 ease-out group-hover:translate-x-[52px] group-hover:-translate-y-[2px]">
-            {/* guard */}
-            <path
-              d="M214 42 L242 36 L252 45 L242 54 L214 48 Z"
-              className="fill-white/10 stroke-white/22"
-              strokeWidth="2"
-              strokeLinejoin="round"
-            />
-            {/* handle */}
-            <path
-              d="M200 38 L214 36 L218 45 L214 54 L200 52 Z"
-              className="fill-white/10 stroke-white/22"
-              strokeWidth="2"
-              strokeLinejoin="round"
-            />
-            {/* pommel */}
-            <circle cx="198" cy="45" r="4.5" className="fill-white/10 stroke-white/22" strokeWidth="2" />
-
-            {/* blade */}
-            <path
-              d="M252 45 L392 45"
-              className="stroke-amber-200/90"
-              strokeWidth="3.2"
-              strokeLinecap="round"
-            />
-            {/* blade ridge */}
-            <path
-              d="M258 41.5 L384 41.5"
-              className="stroke-white/0 group-hover:stroke-white/30 transition"
-              strokeWidth="1.6"
-              strokeLinecap="round"
-            />
-            {/* tip (diamond-ish, less arrow-like) */}
-            <path
-              d="M392 45 L404 38 L414 45 L404 52 Z"
-              className="fill-amber-200/30 stroke-amber-200/90"
-              strokeWidth="2.6"
-              strokeLinejoin="round"
-            />
-
-            {/* tassel */}
-            <path
-              d="M196 52 C182 62, 170 70, 154 76"
-              className="stroke-amber-200/60"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-          </g>
+          {/* center */}
+          <circle cx="32" cy="32" r="4.5" className="fill-amber-200/60" />
         </svg>
 
-        {/* hover glow */}
         <span className="pointer-events-none absolute -inset-2 rounded-full opacity-0 blur-xl transition duration-300 group-hover:opacity-100 bg-amber-300/15" />
       </span>
 
-      <span className="text-xs tracking-[0.34em] text-white/70 group-hover:text-amber-200">CONNECT</span>
+      <span className="text-xs tracking-[0.34em] text-white/70 group-hover:text-amber-200">
+        CONNECT
+      </span>
     </a>
   );
 }
@@ -341,7 +291,7 @@ function TopNav({ onOpen }: { onOpen: () => void }) {
         </a>
 
         <div className="flex items-center gap-3">
-          <FlyingSwordConnect />
+          <GearConnect />
 
           <button
             type="button"
@@ -402,8 +352,8 @@ function Hero() {
 
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 2; // -1..1
-      const y = (e.clientY / window.innerHeight - 0.5) * 2; // -1..1
+      const x = (e.clientX / window.innerWidth - 0.5) * 2;
+      const y = (e.clientY / window.innerHeight - 0.5) * 2;
       setParallax({ x, y });
     };
     window.addEventListener("mousemove", onMove, { passive: true });
@@ -415,10 +365,8 @@ function Hero() {
 
   return (
     <section id="top" className="relative min-h-[100svh] w-full overflow-hidden px-4 sm:px-6 pt-24 sm:pt-28 pb-14 sm:pb-16">
-      {/* base */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#060913] via-[#0a0f20] to-[#05060d]" />
 
-      {/* glow */}
       <div
         className="absolute inset-0 opacity-80"
         style={{
@@ -428,14 +376,19 @@ function Hero() {
         }}
       />
 
-      {/* mist + mountains */}
       <div style={{ transform: `translate3d(${pX * 0.25}px, ${pY * 0.2}px, 0)` }} className="absolute inset-0">
         <MistSheets />
         <MistDots />
       </div>
 
-      {/* vignette */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0)_35%,rgba(0,0,0,0.70)_100%)]" />
+
+      {/* new scroll cue (bottom-left, cleaner) */}
+      <div className="scrollCue" aria-hidden="true">
+        <div className="scrollTrack">
+          <span className="scrollDot" />
+        </div>
+      </div>
 
       <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-6xl items-center">
         <div className="grid w-full grid-cols-1 gap-10 md:grid-cols-2 md:items-center">
@@ -460,20 +413,33 @@ function Hero() {
               <SigilChip>Clear deliverables</SigilChip>
             </div>
 
-            {/* Home: keep only one CTA (Enter). Remove Email/Resume per your request */}
-            <div className="mt-8 flex justify-center md:justify-start">
-              <PrimaryButton href="#projects">Enter</PrimaryButton>
-            </div>
-
-            <div className="mt-10">
-              <a href="#projects" className="group inline-flex flex-col items-center md:items-start gap-1 text-amber-200/75">
-                <span className="text-xs uppercase tracking-[0.35em]">Scroll</span>
-                <span className="text-3xl leading-none transition group-hover:translate-y-0.5">↓</span>
+            {/* improved CTA: bigger + better placement */}
+            <div className="mt-9 flex items-center justify-center md:justify-start gap-3">
+              <a
+                href="#projects"
+                className={clsx(
+                  "inline-flex h-12 items-center justify-center rounded-full px-8 text-base font-semibold",
+                  "bg-amber-300 text-black shadow-lg shadow-amber-900/25",
+                  "transition hover:-translate-y-0.5 hover:bg-amber-200 active:translate-y-0",
+                  "focus:outline-none focus:ring-2 focus:ring-amber-200/60"
+                )}
+              >
+                View Projects
+              </a>
+              <a
+                href="#contact"
+                className={clsx(
+                  "inline-flex h-12 items-center justify-center rounded-full px-7 text-base font-semibold",
+                  "border border-white/16 bg-white/8 text-white backdrop-blur",
+                  "transition hover:-translate-y-0.5 hover:bg-white/12 active:translate-y-0"
+                )}
+              >
+                Contact
               </a>
             </div>
           </div>
 
-          {/* right (photo + small stat pills only; no Featured) */}
+          {/* right */}
           <div className="mx-auto w-full max-w-[520px]">
             <div className="heroCard">
               <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-white/10">
@@ -530,7 +496,60 @@ function Hero() {
           backdrop-filter: blur(10px);
         }
 
-        /* mist sheets (cheap & stable) */
+        /* gear icon animation */
+        .gearIcon {
+          transform-origin: 50% 50%;
+          animation: gearIdle 14s linear infinite;
+        }
+        a.group:hover .gearIcon {
+          animation: gearFast 1.2s linear infinite;
+        }
+        @keyframes gearIdle {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        @keyframes gearFast {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+
+        /* scroll cue */
+        .scrollCue {
+          position: absolute;
+          left: 28px;
+          bottom: 22px;
+          z-index: 20;
+          opacity: 0.75;
+        }
+        .scrollTrack {
+          width: 18px;
+          height: 54px;
+          border-radius: 999px;
+          border: 1px solid rgba(255, 255, 255, 0.18);
+          background: rgba(255, 255, 255, 0.04);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+          position: relative;
+          overflow: hidden;
+        }
+        .scrollDot {
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          top: 10px;
+          width: 6px;
+          height: 6px;
+          border-radius: 999px;
+          background: rgba(255, 220, 150, 0.85);
+          animation: scrollDot 1.6s ease-in-out infinite;
+          box-shadow: 0 0 18px rgba(255, 220, 150, 0.18);
+        }
+        @keyframes scrollDot {
+          0% { top: 10px; opacity: 0.35; }
+          50% { top: 32px; opacity: 0.95; }
+          100% { top: 10px; opacity: 0.35; }
+        }
+
+        /* mist sheets */
         .mistSheet {
           position: absolute;
           left: -20%;
@@ -546,10 +565,7 @@ function Hero() {
           animation-timing-function: linear;
           animation-iteration-count: infinite;
         }
-        .mistSheet1 {
-          opacity: 0.18;
-          animation-duration: 54s;
-        }
+        .mistSheet1 { opacity: 0.18; animation-duration: 54s; }
         .mistSheet2 {
           bottom: -6vh;
           opacity: 0.26;
@@ -558,23 +574,13 @@ function Hero() {
           animation-direction: reverse;
         }
         @keyframes mistDrift {
-          0% {
-            background-position: 0 0;
-          }
-          100% {
-            background-position: 1200px 0;
-          }
+          0% { background-position: 0 0; }
+          100% { background-position: 1200px 0; }
         }
         @keyframes mistFloat {
-          0% {
-            transform: translate3d(0, 0, 0) scale(1);
-          }
-          50% {
-            transform: translate3d(26px, -12px, 0) scale(1);
-          }
-          100% {
-            transform: translate3d(0, 0, 0) scale(1);
-          }
+          0% { transform: translate3d(0, 0, 0) scale(1); }
+          50% { transform: translate3d(26px, -12px, 0) scale(1); }
+          100% { transform: translate3d(0, 0, 0) scale(1); }
         }
 
         .mountainBand {
@@ -587,21 +593,18 @@ function Hero() {
           background-repeat: no-repeat;
           background-size: 1600px 420px;
           opacity: 0.9;
-          filter: blur(0px);
           pointer-events: none;
         }
 
         @media (max-width: 768px) {
-          .mountainBand {
-            width: 1200px;
-            background-size: 1200px 420px;
-          }
+          .mountainBand { width: 1200px; background-size: 1200px 420px; }
+          .scrollCue { left: 18px; bottom: 18px; opacity: 0.6; }
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .mistSheet {
-            animation: none !important;
-          }
+          .mistSheet { animation: none !important; }
+          .scrollDot { animation: none !important; }
+          .gearIcon { animation: none !important; }
         }
       `}</style>
     </section>
@@ -640,24 +643,21 @@ function ProjectCard({ p }: { p: Project }) {
         </div>
 
         <div className="mt-6 flex flex-wrap gap-2">
-          {p.links.map((l) => {
-            // per your request: ALL buttons here should be yellow like "Open"
-            return (
-              <a
-                key={l.href}
-                href={l.href}
-                target={l.external ? "_blank" : undefined}
-                rel={l.external ? "noreferrer" : undefined}
-                className={clsx(
-                  "inline-flex h-11 items-center justify-center rounded-full px-5 text-sm font-semibold",
-                  "bg-amber-300 text-black shadow-lg shadow-amber-900/25",
-                  "transition hover:-translate-y-0.5 hover:bg-amber-200 active:translate-y-0"
-                )}
-              >
-                {l.label}
-              </a>
-            );
-          })}
+          {p.links.map((l) => (
+            <a
+              key={l.href}
+              href={l.href}
+              target={l.external ? "_blank" : undefined}
+              rel={l.external ? "noreferrer" : undefined}
+              className={clsx(
+                "inline-flex h-11 items-center justify-center rounded-full px-5 text-sm font-semibold",
+                "bg-amber-300 text-black shadow-lg shadow-amber-900/25",
+                "transition hover:-translate-y-0.5 hover:bg-amber-200 active:translate-y-0"
+              )}
+            >
+              {l.label}
+            </a>
+          ))}
         </div>
       </div>
 
@@ -777,18 +777,13 @@ function ContactSection() {
             solid outputs.
           </p>
 
-          {/* per your request: make Download + GitHub yellow like Open */}
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <PrimaryButton href="mailto:cchen90@stevens.edu">Email me</PrimaryButton>
             <PrimaryButton href="/Changye_Resume.pdf">Download resume</PrimaryButton>
             <PrimaryButton href="https://github.com/Changye0125" target="_blank" rel="noreferrer">
               GitHub
             </PrimaryButton>
-            <PrimaryButton
-              href="https://www.linkedin.com/in/changye-chen-a61746383/"
-              target="_blank"
-              rel="noreferrer"
-            >
+            <PrimaryButton href="https://www.linkedin.com/in/changye-chen-a61746383/" target="_blank" rel="noreferrer">
               LinkedIn
             </PrimaryButton>
           </div>
@@ -812,7 +807,6 @@ function ContactSection() {
 export default function Page() {
   const [open, setOpen] = useState(false);
 
-  // IMPORTANT: spaces in filenames are risky; encodeURI makes links safer.
   const em624Pptx = encodeURI("/EM624 - Predicting NFL Game Outcomes.pptx");
   const sys611Pdf = encodeURI("/SYS611_TermProject_NFL4thDown_MonteCarlo.pdf");
 
