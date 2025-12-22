@@ -3,7 +3,23 @@
 import Image from "next/image";
 import React, { useEffect, useMemo, useState } from "react";
 
-type Mist = {
+type ProjectLink = {
+  label: string;
+  href: string;
+  variant?: "primary" | "ghost";
+  external?: boolean;
+};
+
+type Project = {
+  name: string;
+  tagline: string;
+  summary: string[];
+  tags: string[];
+  image?: string; // in /public
+  links: ProjectLink[];
+};
+
+type MistDot = {
   left: number;
   top: number;
   delay: number;
@@ -11,16 +27,6 @@ type Mist = {
   scale: number;
   opacity: number;
   blur: number;
-};
-
-type Project = {
-  name: string;
-  desc: string;
-  tags: string[];
-  image?: string;
-  link?: string;
-  repo?: string;
-  slides?: string;
 };
 
 function makeRng(seed: number) {
@@ -31,119 +37,197 @@ function makeRng(seed: number) {
   };
 }
 
-/** 雾点：固定随机，避免 hydration mismatch */
-function useMist(count = 10): Mist[] {
+function useMistDots(count = 12): MistDot[] {
   return useMemo(() => {
     const rnd = makeRng(20251222 + count * 31);
     return Array.from({ length: count }).map(() => ({
       left: rnd() * 100,
-      top: 6 + rnd() * 70,
+      top: 10 + rnd() * 70,
       delay: rnd() * 6,
       duration: 18 + rnd() * 22,
-      scale: 0.7 + rnd() * 1.1,
-      opacity: 0.1 + rnd() * 0.18,
-      blur: 10 + rnd() * 18,
+      scale: 0.75 + rnd() * 1.1,
+      opacity: 0.09 + rnd() * 0.18,
+      blur: 10 + rnd() * 22,
     }));
   }, [count]);
 }
 
-/** 一张“水墨雾团”SVG（可重复铺开） */
+/** ink-mist blob (tileable) */
 const MIST_SVG_DATA_URI =
   "data:image/svg+xml;utf8," +
   encodeURIComponent(`
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420">
   <defs>
-    <filter id="b" x="-20%" y="-50%" width="140%" height="200%">
+    <filter id="b" x="-20%" y="-60%" width="140%" height="240%">
       <feGaussianBlur stdDeviation="22" />
     </filter>
   </defs>
-  <g filter="url(#b)" opacity="0.95">
-    <ellipse cx="120" cy="260" rx="220" ry="90" fill="#ffffff" fill-opacity="0.55"/>
-    <ellipse cx="330" cy="240" rx="260" ry="105" fill="#ffffff" fill-opacity="0.50"/>
-    <ellipse cx="560" cy="270" rx="320" ry="120" fill="#ffffff" fill-opacity="0.44"/>
-    <ellipse cx="820" cy="245" rx="300" ry="110" fill="#ffffff" fill-opacity="0.46"/>
-    <ellipse cx="1040" cy="275" rx="260" ry="100" fill="#ffffff" fill-opacity="0.50"/>
-    <rect x="0" y="260" width="1200" height="160" fill="#ffffff" fill-opacity="0.24"/>
+  <g filter="url(#b)" opacity="0.96">
+    <ellipse cx="140" cy="260" rx="240" ry="92" fill="#ffffff" fill-opacity="0.55"/>
+    <ellipse cx="360" cy="235" rx="280" ry="110" fill="#ffffff" fill-opacity="0.50"/>
+    <ellipse cx="610" cy="275" rx="340" ry="125" fill="#ffffff" fill-opacity="0.45"/>
+    <ellipse cx="860" cy="242" rx="310" ry="118" fill="#ffffff" fill-opacity="0.46"/>
+    <ellipse cx="1060" cy="280" rx="270" ry="105" fill="#ffffff" fill-opacity="0.50"/>
+    <rect x="0" y="258" width="1200" height="162" fill="#ffffff" fill-opacity="0.24"/>
   </g>
 </svg>
 `);
 
+/** subtle mountain silhouette */
+const MOUNTAIN_SVG_DATA_URI =
+  "data:image/svg+xml;utf8," +
+  encodeURIComponent(`
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="420" viewBox="0 0 1600 420">
+  <path d="M0 340
+           C120 310, 190 290, 280 250
+           C360 210, 440 180, 520 210
+           C610 250, 700 300, 820 250
+           C930 210, 980 140, 1120 170
+           C1240 195, 1320 280, 1450 250
+           C1520 235, 1560 245, 1600 260
+           L1600 420 L0 420 Z"
+        fill="rgba(12,16,28,0.85)"/>
+  <path d="M0 360
+           C180 335, 240 320, 360 290
+           C500 255, 590 240, 720 265
+           C860 290, 960 335, 1120 300
+           C1280 270, 1380 280, 1600 310
+           L1600 420 L0 420 Z"
+        fill="rgba(8,10,18,0.75)"/>
+</svg>
+`);
+
+function clsx(...xs: Array<string | false | null | undefined>) {
+  return xs.filter(Boolean).join(" ");
+}
+
+function PrimaryButton(props: React.ComponentProps<"a">) {
+  const { className, ...rest } = props;
+  return (
+    <a
+      {...rest}
+      className={clsx(
+        "inline-flex h-11 items-center justify-center rounded-full px-6 text-sm font-semibold",
+        "bg-amber-300 text-black shadow-lg shadow-amber-900/25",
+        "transition hover:-translate-y-0.5 hover:bg-amber-200 active:translate-y-0",
+        "focus:outline-none focus:ring-2 focus:ring-amber-200/60",
+        className
+      )}
+    />
+  );
+}
+
+function GhostButton(props: React.ComponentProps<"a">) {
+  const { className, ...rest } = props;
+  return (
+    <a
+      {...rest}
+      className={clsx(
+        "inline-flex h-11 items-center justify-center rounded-full px-6 text-sm font-semibold",
+        "border border-white/16 bg-white/8 text-white backdrop-blur",
+        "transition hover:-translate-y-0.5 hover:bg-white/12 active:translate-y-0",
+        className
+      )}
+    />
+  );
+}
+
+function SigilChip({ children }: { children: React.ReactNode }) {
+  return (
+    <span
+      className={clsx(
+        "inline-flex items-center gap-1 rounded-full px-3 py-1 text-[11px] text-white/70",
+        "border border-white/12 bg-white/[0.06]",
+        "shadow-[inset_0_1px_0_rgba(255,255,255,0.10)]"
+      )}
+    >
+      <span className="h-1 w-1 rounded-full bg-amber-200/70" />
+      {children}
+    </span>
+  );
+}
+
+/** Sword link (wuxia vibe, still readable for recruiters) */
 function SwordConnect() {
   return (
     <a
       href="#contact"
       className="group relative flex items-center gap-2 select-none"
-      aria-label="Connect me"
-      title="Connect me"
+      aria-label="Connect"
+      title="Connect"
     >
-      <span className="relative h-10 w-[190px]">
-        <svg viewBox="0 0 360 90" className="absolute inset-0 h-full w-full" fill="none">
-          {/* 鞘 */}
+      <span className="relative h-10 w-[210px]">
+        <svg viewBox="0 0 420 90" className="absolute inset-0 h-full w-full" fill="none">
+          {/* sheath */}
           <path
-            d="M20 45 C70 18, 160 18, 205 45 C160 72, 70 72, 20 45 Z"
-            className="fill-white/10 stroke-white/25"
+            d="M22 45 C86 16, 200 16, 250 45 C200 74, 86 74, 22 45 Z"
+            className="fill-white/10 stroke-white/22"
             strokeWidth="2"
           />
+          {/* sheath cap */}
           <path
-            d="M18 45 C12 40, 12 50, 18 45 Z"
-            className="fill-white/10 stroke-white/25"
+            d="M22 45 C10 38, 10 52, 22 45 Z"
+            className="fill-white/10 stroke-white/22"
             strokeWidth="2"
           />
-
-          {/* 护手 */}
+          {/* guard */}
           <path
-            d="M214 36 L236 36 L242 45 L236 54 L214 54 Z"
-            className="fill-white/10 stroke-white/25"
+            d="M258 33 L286 33 L296 45 L286 57 L258 57 Z"
+            className="fill-white/10 stroke-white/22"
             strokeWidth="2"
           />
-          {/* 剑柄 */}
+          {/* handle */}
           <path
-            d="M242 32 L268 32 L284 45 L268 58 L242 58 Z"
-            className="fill-white/10 stroke-white/25"
+            d="M296 28 L328 28 L350 45 L328 62 L296 62 Z"
+            className="fill-white/10 stroke-white/22"
             strokeWidth="2"
           />
-          {/* 缠绕 */}
-          <path d="M248 38 L270 52" className="stroke-white/18" strokeWidth="2" strokeLinecap="round" />
-          <path d="M248 52 L270 38" className="stroke-white/18" strokeWidth="2" strokeLinecap="round" />
-          {/* 穗 */}
+          {/* wrap lines */}
+          <path d="M304 36 L334 54" className="stroke-white/18" strokeWidth="2" strokeLinecap="round" />
+          <path d="M304 54 L334 36" className="stroke-white/18" strokeWidth="2" strokeLinecap="round" />
+          {/* tassel */}
           <path
-            d="M282 58 C290 66, 300 72, 312 78"
+            d="M348 62 C362 72, 376 78, 396 84"
             className="stroke-amber-200/55"
             strokeWidth="2"
             strokeLinecap="round"
           />
 
-          {/* 剑身：hover 出鞘 */}
-          <g className="transition-transform duration-300 ease-out group-hover:translate-x-[42px]">
-            <path d="M236 45 L338 45" className="stroke-amber-200/80" strokeWidth="3" strokeLinecap="round" />
+          {/* blade group: slides out on hover */}
+          <g className="transition-transform duration-300 ease-out group-hover:translate-x-[56px]">
+            {/* spine */}
+            <path d="M286 45 L402 45" className="stroke-amber-200/85" strokeWidth="3" strokeLinecap="round" />
+            {/* edge highlight */}
             <path
-              d="M252 42 L328 42"
+              d="M292 41 L394 41"
               className="stroke-white/35 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
               strokeWidth="1.6"
               strokeLinecap="round"
             />
+            {/* tip */}
             <path
-              d="M334 36 L350 45 L334 54"
-              className="stroke-amber-200/80"
+              d="M396 34 L412 45 L396 56"
+              className="stroke-amber-200/85"
               strokeWidth="3"
               strokeLinejoin="round"
               strokeLinecap="round"
             />
+            {/* flowing shine */}
             <path
-              d="M292 28 L306 45 L292 62"
-              className="stroke-white/25 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+              d="M300 49 L392 49"
+              className="bladeShine stroke-white/0 group-hover:stroke-white/25"
               strokeWidth="2"
-              strokeLinejoin="round"
               strokeLinecap="round"
             />
           </g>
         </svg>
 
+        {/* glow */}
         <span className="pointer-events-none absolute -inset-2 rounded-full opacity-0 blur-xl transition duration-300 group-hover:opacity-100 bg-amber-300/15" />
       </span>
 
       <span className="text-xs tracking-[0.34em] text-white/70 group-hover:text-amber-200">
-        CONNECT ME
+        CONNECT
       </span>
     </a>
   );
@@ -152,15 +236,9 @@ function SwordConnect() {
 function Drawer({
   open,
   onClose,
-  email,
-  github,
-  resume,
 }: {
   open: boolean;
   onClose: () => void;
-  email: string;
-  github: string;
-  resume: string;
 }) {
   useEffect(() => {
     if (!open) return;
@@ -170,23 +248,22 @@ function Drawer({
   }, [open, onClose]);
 
   return (
-    <div
-      className={["fixed inset-0 z-[70] transition", open ? "pointer-events-auto" : "pointer-events-none"].join(" ")}
-      aria-hidden={!open}
-    >
+    <div className={clsx("fixed inset-0 z-[70] transition", open ? "pointer-events-auto" : "pointer-events-none")}>
       <div
-        className={["absolute inset-0 bg-black/55 backdrop-blur-sm transition-opacity", open ? "opacity-100" : "opacity-0"].join(" ")}
+        className={clsx(
+          "absolute inset-0 bg-black/55 backdrop-blur-sm transition-opacity",
+          open ? "opacity-100" : "opacity-0"
+        )}
         onClick={onClose}
       />
-
       <aside
-        className={[
-          "absolute right-0 top-0 h-full w-[320px] max-w-[85vw]",
+        className={clsx(
+          "absolute right-0 top-0 h-full w-[340px] max-w-[88vw]",
           "border-l border-white/12 bg-black/40 backdrop-blur-xl",
           "shadow-[0_30px_120px_rgba(0,0,0,0.6)]",
           "transition-transform duration-300 ease-out",
-          open ? "translate-x-0" : "translate-x-full",
-        ].join(" ")}
+          open ? "translate-x-0" : "translate-x-full"
+        )}
       >
         <div className="flex items-center justify-between px-5 py-4 border-b border-white/10">
           <div className="text-xs tracking-[0.34em] text-white/70">MENU</div>
@@ -198,6 +275,7 @@ function Drawer({
           </button>
         </div>
 
+        {/* (you said: menu buttons don't need to change) */}
         <nav className="px-5 py-5 space-y-2">
           {[
             ["Home", "#top"],
@@ -219,16 +297,14 @@ function Drawer({
         <div className="px-5 pt-2 pb-6 text-xs text-white/55">
           <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-4">
             <div className="text-white/70">Quick links</div>
-
-            {/* ✅ 这里不要嵌套 <a>，也不要用 p.link */}
             <div className="mt-3 space-y-2">
-              <a className="block hover:text-amber-200" href={`mailto:${email}`}>
-                {email}
+              <a className="block hover:text-amber-200" href="mailto:cchen90@stevens.edu">
+                cchen90@stevens.edu
               </a>
-              <a className="block hover:text-amber-200" href={github} target="_blank" rel="noreferrer">
+              <a className="block hover:text-amber-200" href="https://github.com/Changye0125" target="_blank" rel="noreferrer">
                 GitHub →
               </a>
-              <a className="block hover:text-amber-200" href={resume} target="_blank" rel="noreferrer">
+              <a className="block hover:text-amber-200" href="/Changye_Resume.pdf">
                 Resume →
               </a>
             </div>
@@ -269,17 +345,17 @@ function TopNav({ onOpen }: { onOpen: () => void }) {
 }
 
 function MistSheets() {
-  // 两层“铺开的雾”，靠 background-position 漂移，性能很好
   return (
     <>
       <div className="mistSheet mistSheet1" style={{ backgroundImage: `url("${MIST_SVG_DATA_URI}")` }} />
       <div className="mistSheet mistSheet2" style={{ backgroundImage: `url("${MIST_SVG_DATA_URI}")` }} />
+      <div className="mountainBand" style={{ backgroundImage: `url("${MOUNTAIN_SVG_DATA_URI}")` }} />
     </>
   );
 }
 
 function MistDots() {
-  const mist = useMist(12);
+  const mist = useMistDots(12);
   return (
     <div className="pointer-events-none absolute inset-0">
       {mist.map((m, i) => (
@@ -289,320 +365,176 @@ function MistDots() {
           style={{
             left: `${m.left}%`,
             top: `${m.top}%`,
-            width: 520,
-            height: 220,
+            width: 560,
+            height: 240,
             opacity: m.opacity,
-            filter: `blur(${m.blur}px)`,
             transform: `translate3d(0,0,0) scale(${m.scale})`,
+            filter: `blur(${m.blur}px)`,
+            backgroundImage: `url("${MIST_SVG_DATA_URI}")`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            animation: `mistFloat ${m.duration}s ease-in-out ${m.delay}s infinite`,
           }}
-        >
-          {/* 内层负责动画，外层负责 scale/blur（避免 transform 覆盖） */}
-          <span
-            className="block h-full w-full"
-            style={{
-              backgroundImage: `url("${MIST_SVG_DATA_URI}")`,
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "cover",
-              animation: `mistFloat ${m.duration}s ease-in-out ${m.delay}s infinite`,
-            }}
-          />
-        </span>
+        />
       ))}
     </div>
   );
 }
 
-function Hero({ email }: { email: string }) {
+function Hero({ projects }: { projects: Project[] }) {
+  const [parallax, setParallax] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 2; // -1..1
+      const y = (e.clientY / window.innerHeight - 0.5) * 2; // -1..1
+      setParallax({ x, y });
+    };
+    window.addEventListener("mousemove", onMove, { passive: true });
+    return () => window.removeEventListener("mousemove", onMove as any);
+  }, []);
+
+  const pX = parallax.x * 6;
+  const pY = parallax.y * 4;
+
   return (
-    <section className="relative min-h-[100svh] w-full overflow-hidden px-4 sm:px-6 pt-24 sm:pt-28 pb-14 sm:pb-16">
+    <section
+      id="top"
+      className="relative min-h-[100svh] w-full overflow-hidden px-4 sm:px-6 pt-24 sm:pt-28 pb-14 sm:pb-16 snap-start"
+    >
       {/* base */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#060913] via-[#0a0f20] to-[#05060d]" />
 
-      {/* 灵气光晕 */}
+      {/* glow */}
       <div
-        className="absolute inset-0 opacity-70"
+        className="absolute inset-0 opacity-80"
         style={{
+          transform: `translate3d(${pX * 0.35}px, ${pY * 0.35}px, 0)`,
           backgroundImage:
-            "radial-gradient(circle at 20% 18%, rgba(255, 220, 150, 0.18), transparent 38%), radial-gradient(circle at 80% 22%, rgba(180, 230, 210, 0.10), transparent 40%), radial-gradient(circle at 50% 60%, rgba(255, 255, 255, 0.06), transparent 46%)",
+            "radial-gradient(circle at 18% 20%, rgba(255, 220, 150, 0.18), transparent 38%), radial-gradient(circle at 82% 24%, rgba(180, 230, 210, 0.10), transparent 40%), radial-gradient(circle at 50% 60%, rgba(255, 255, 255, 0.06), transparent 46%)",
         }}
       />
 
-      {/* 云雾 */}
-      <MistSheets />
-      <MistDots />
+      {/* mist + mountains */}
+      <div style={{ transform: `translate3d(${pX * 0.25}px, ${pY * 0.2}px, 0)` }} className="absolute inset-0">
+        <MistSheets />
+        <MistDots />
+      </div>
 
       {/* vignette */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0)_35%,rgba(0,0,0,0.68)_100%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0)_35%,rgba(0,0,0,0.70)_100%)]" />
 
-      <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-6xl items-center justify-center">
-        <div className="text-center">
-          <h1 className="mt-2 text-balance text-5xl sm:text-6xl md:text-7xl font-semibold leading-[1.05]">
-            <span className="gold-text drop-shadow-[0_18px_60px_rgba(0,0,0,0.6)] block">Make It Work.</span>
-            <span className="gold-text drop-shadow-[0_18px_60px_rgba(0,0,0,0.6)] block mt-2">
-              Make It Scale.
-            </span>
-          </h1>
+      <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-6xl items-center">
+        <div className="grid w-full grid-cols-1 gap-10 md:grid-cols-2 md:items-center">
+          {/* left */}
+          <div className="text-center md:text-left">
+            <p className="text-xs tracking-[0.34em] text-white/55">ENGINEERING MANAGEMENT • DATA & ML</p>
 
-          <p className="mt-6 mx-auto max-w-2xl text-sm sm:text-base leading-7 text-white/70">
-            Changye Chen · Engineering Management · Data & ML
-            <span className="block text-xs text-white/50 mt-1">2D 云雾漂移 + 玻璃质感（不建模也能很像）</span>
-          </p>
+            <h1 className="mt-5 text-balance text-5xl sm:text-6xl md:text-7xl font-semibold leading-[1.05]">
+              <span className="gold-text drop-shadow-[0_18px_60px_rgba(0,0,0,0.6)] block">
+                Make It Work.
+              </span>
+              <span className="gold-text drop-shadow-[0_18px_60px_rgba(0,0,0,0.6)] block mt-2">
+                Make It Scale.
+              </span>
+            </h1>
 
-          <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-            <a
-              href="#projects"
-              className="w-full sm:w-auto rounded-full bg-amber-300 px-7 py-3 text-center text-sm font-semibold text-black shadow-lg shadow-amber-900/30 transition hover:-translate-y-0.5 hover:bg-amber-200"
-            >
-              Enter
-            </a>
-            <a
-              href={`mailto:${email}`}
-              className="w-full sm:w-auto rounded-full border border-white/15 bg-white/8 px-7 py-3 text-center text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-white/12"
-            >
-              Email
-            </a>
-          </div>
+            <p className="mt-6 max-w-xl mx-auto md:mx-0 text-sm sm:text-base leading-7 text-white/72">
+              I build reproducible, decision-focused analytics: leakage-safe ML pipelines, simulation with uncertainty,
+              and stakeholder-ready reporting.
+            </p>
 
-          {/* 小玉牌（头像可选） */}
-          <div className="mt-10 mx-auto w-full max-w-[420px]">
-            <div className="glassCard">
-              <div className="flex items-center gap-4">
-                <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-white/5">
-                  <Image
-                    src="/me_4x5_1600w.webp"
-                    alt="Portrait"
-                    fill
-                    className="object-cover"
-                    sizes="80px"
-                  />
-                </div>
-                <div className="min-w-0 text-left">
-                  <p className="truncate text-sm font-semibold text-amber-50">Decision-focused analytics</p>
-                  <p className="mt-1 text-xs text-white/60">Leakage-free ML · Simulation · Stakeholder-ready</p>
-                  <p className="mt-2 text-xs text-white/55">（下一步我们把这块做成更“卷轴/玉牌”）</p>
-                </div>
-              </div>
+            <div className="mt-6 flex flex-wrap gap-2 justify-center md:justify-start">
+              <SigilChip>Leakage-safe modeling</SigilChip>
+              <SigilChip>Monte Carlo + CI</SigilChip>
+              <SigilChip>Data QA & pipelines</SigilChip>
+              <SigilChip>Clear deliverables</SigilChip>
             </div>
-          </div>
 
-          <div className="mt-10">
-            <a href="#projects" className="group inline-flex flex-col items-center gap-1 text-amber-200/75">
-              <span className="text-xs uppercase tracking-[0.35em]">Scroll</span>
-              <span className="text-3xl leading-none transition group-hover:translate-y-0.5">↓</span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function ProjectsSection({ projects }: { projects: Project[] }) {
-  return (
-    <section id="projects" className="relative w-full overflow-hidden scroll-mt-24 py-16">
-      <div className="absolute inset-0 bg-gradient-to-b from-[#060913] via-[#0a0f20] to-[#05060d]" />
-      <div
-        className="absolute inset-0 opacity-40"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 25% 20%, rgba(255, 220, 150, 0.12), transparent 40%), radial-gradient(circle at 80% 65%, rgba(180, 230, 210, 0.08), transparent 44%)",
-        }}
-      />
-      <MistSheets />
-
-      <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="text-center">
-          <p className="text-xs uppercase tracking-[0.35em] text-amber-200/70">Projects</p>
-          <h2 className="mt-3 text-3xl font-semibold text-amber-50 drop-shadow md:text-4xl">Case Studies</h2>
-          <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-white/65">
-            先把结构搭稳：卡片 = 项目简介 + 技术标签 + 可点链接。下一步再做“玉牌/卷轴”强化仙侠感。
-          </p>
-        </div>
-
-        <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">
-          {projects.map((p) => (
-            <div
-              key={p.name}
-              className="rounded-3xl border border-white/12 bg-white/5 p-4 shadow-[0_24px_70px_rgba(0,0,0,0.55)] backdrop-blur transition-transform duration-300 hover:-translate-y-1"
-            >
-              <div className="relative aspect-[16/10] overflow-hidden rounded-2xl border border-white/10 bg-white/5">
-                {p.image ? (
-                  <Image
-                    src={p.image}
-                    alt={p.name}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 92vw, 33vw"
-                  />
-                ) : (
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_35%,rgba(255,220,150,0.08),transparent_50%),radial-gradient(circle_at_75%_35%,rgba(180,230,210,0.06),transparent_55%)]" />
-                )}
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/25" />
-              </div>
-
-              <div className="mt-4">
-                <p className="text-base font-semibold text-amber-50">{p.name}</p>
-                <p className="mt-2 text-sm text-white/65 leading-6">{p.desc}</p>
-
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {p.tags.map((t) => (
-                    <span key={t} className="rounded-full border border-white/12 bg-white/5 px-3 py-1 text-xs text-white/70">
-                      {t}
-                    </span>
-                  ))}
-                </div>
-
-                <div className="mt-5 flex flex-wrap gap-2">
-                  {p.link ? (
-                    <a
-                      href={p.link}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="rounded-full bg-amber-300 px-5 py-2 text-xs font-semibold text-black shadow-lg shadow-amber-900/25 transition hover:-translate-y-0.5 hover:bg-amber-200"
-                    >
-                      Open →
-                    </a>
-                  ) : (
-                    <span className="rounded-full border border-white/12 bg-black/25 px-4 py-2 text-xs text-white/60">
-                      Private / Coming soon
-                    </span>
-                  )}
-
-                  {p.repo ? (
-                    <a
-                      href={p.repo}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="rounded-full border border-white/15 bg-white/8 px-5 py-2 text-xs font-semibold text-white transition hover:-translate-y-0.5 hover:bg-white/12"
-                    >
-                      Repo
-                    </a>
-                  ) : null}
-
-                  {p.slides ? (
-                    <a
-                      href={p.slides}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="rounded-full border border-white/15 bg-white/8 px-5 py-2 text-xs font-semibold text-white transition hover:-translate-y-0.5 hover:bg-white/12"
-                    >
-                      Slides
-                    </a>
-                  ) : null}
-                </div>
-              </div>
+            <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center md:justify-start">
+              <PrimaryButton href="#projects">Enter</PrimaryButton>
+              <GhostButton href="mailto:cchen90@stevens.edu">Email</GhostButton>
+              <GhostButton href="/Changye_Resume.pdf">Resume</GhostButton>
             </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
 
-function AboutSection() {
-  return (
-    <section id="about" className="relative w-full overflow-hidden scroll-mt-24 py-16">
-      <div className="absolute inset-0 bg-gradient-to-b from-[#05060d] via-[#070b16] to-[#05060d]" />
-      <div
-        className="absolute inset-0 opacity-35"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 20% 30%, rgba(255, 220, 150, 0.10), transparent 40%), radial-gradient(circle at 80% 70%, rgba(180, 230, 210, 0.08), transparent 44%)",
-        }}
-      />
-      <MistSheets />
-
-      <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="text-center">
-          <p className="text-xs uppercase tracking-[0.35em] text-amber-200/70">About</p>
-          <h2 className="mt-3 text-3xl font-semibold text-amber-50 drop-shadow md:text-4xl">Who I am</h2>
-          <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-white/65">
-            这里先占位。下一步我们把“仙侠世界观”融进文案：像“修炼路径”一样展示你的能力成长线。
-          </p>
-        </div>
-
-        <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">
-          {[
-            { t: "Focus", d: "Data & ML, evaluation, simulation, reproducible pipelines." },
-            { t: "Style", d: "Clear metrics, clean outputs, stakeholder-friendly reporting." },
-            { t: "Goal", d: "Make decisions measurable and scalable." },
-          ].map((x) => (
-            <div key={x.t} className="glassCard p-6">
-              <div className="text-xs tracking-[0.34em] text-white/55">{x.t.toUpperCase()}</div>
-              <div className="mt-3 text-base font-semibold text-amber-50">{x.t}</div>
-              <div className="mt-3 text-sm leading-6 text-white/65">{x.d}</div>
+            <div className="mt-7 flex flex-wrap items-center gap-4 text-sm text-white/65 justify-center md:justify-start">
+              <a className="hover:text-amber-200 transition" href="https://github.com/Changye0125" target="_blank" rel="noreferrer">
+                GitHub →
+              </a>
+              <a className="hover:text-amber-200 transition" href="#contact">
+                Contact →
+              </a>
             </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
 
-function ContactSection({ email, github, resume }: { email: string; github: string; resume: string }) {
-  return (
-    <section id="contact" className="relative w-full overflow-hidden scroll-mt-24 py-16">
-      <div className="absolute inset-0 bg-gradient-to-b from-[#05060d] via-[#0a0f20] to-[#05060d]" />
-      <div
-        className="absolute inset-0 opacity-40"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 25% 35%, rgba(255, 220, 150, 0.12), transparent 45%), radial-gradient(circle at 80% 60%, rgba(180, 230, 210, 0.08), transparent 48%)",
-        }}
-      />
-      <MistSheets />
-
-      <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="glassCard p-8 md:p-10">
-          <div className="text-xs uppercase tracking-[0.35em] text-amber-200/70">Contact</div>
-          <h2 className="mt-3 text-2xl md:text-3xl font-semibold text-amber-50 drop-shadow">
-            Let’s build something measurable.
-          </h2>
-          <p className="mt-4 max-w-2xl text-sm leading-7 text-white/65">
-            有项目/实习/合作需求：直接发邮件最快。右上角剑也可以“出鞘”跳到这里。
-          </p>
-
-          <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-            <a
-              href={`mailto:${email}`}
-              className="rounded-full bg-amber-300 px-7 py-3 text-center text-sm font-semibold text-black shadow-lg shadow-amber-900/25 transition hover:-translate-y-0.5 hover:bg-amber-200"
-            >
-              Email me
-            </a>
-            <a
-              href={github}
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-full border border-white/15 bg-white/8 px-7 py-3 text-center text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-white/12"
-            >
-              GitHub
-            </a>
-            <a
-              href={resume}
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-full border border-white/15 bg-white/8 px-7 py-3 text-center text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-white/12"
-            >
-              Resume
-            </a>
-          </div>
-
-          <div className="mt-6 text-sm text-white/65">
-            <div className="flex flex-wrap gap-4">
-              <span className="text-white/50">Email:</span>
-              <a className="hover:text-amber-200" href={`mailto:${email}`}>
-                {email}
+            <div className="mt-10">
+              <a href="#projects" className="group inline-flex flex-col items-center md:items-start gap-1 text-amber-200/75">
+                <span className="text-xs uppercase tracking-[0.35em]">Scroll</span>
+                <span className="text-3xl leading-none transition group-hover:translate-y-0.5">↓</span>
               </a>
             </div>
           </div>
-        </div>
 
-        <footer className="py-10 text-center text-xs text-white/45">
-          © {new Date().getFullYear()} Changye Chen
-        </footer>
+          {/* right (bigger photo + quick card) */}
+          <div className="mx-auto w-full max-w-[520px]">
+            <div className="heroCard">
+              <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-white/10">
+                <Image
+                  src="/me_4x5_1600w.webp"
+                  alt="Portrait of Changye Chen"
+                  fill
+                  priority
+                  className="object-cover"
+                  sizes="(max-width: 768px) 92vw, 520px"
+                />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-black/0 to-black/45" />
+              </div>
+
+              <div className="mt-4 grid grid-cols-3 gap-2">
+                {[
+                  ["Focus", "Data + ML"],
+                  ["Style", "Reproducible"],
+                  ["Output", "Measurable"],
+                ].map(([k, v]) => (
+                  <div key={k} className="statPill">
+                    <p className="text-xs text-white/55">{k}</p>
+                    <p className="mt-1 text-sm font-semibold text-white">{v}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.06] p-4">
+                <p className="text-sm font-semibold text-amber-50">Featured</p>
+                <p className="mt-1 text-xs text-white/60">
+                  {projects[0]?.name ?? "Projects"}
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {(projects[0]?.links ?? []).slice(0, 2).map((l) => (
+                    <a
+                      key={l.href}
+                      href={l.href}
+                      target={l.external ? "_blank" : undefined}
+                      rel={l.external ? "noreferrer" : undefined}
+                      className={clsx(
+                        "inline-flex h-10 items-center justify-center rounded-full px-4 text-xs font-semibold transition hover:-translate-y-0.5 active:translate-y-0",
+                        l.variant === "primary"
+                          ? "bg-amber-300 text-black shadow-lg shadow-amber-900/25 hover:bg-amber-200"
+                          : "border border-white/16 bg-white/8 text-white hover:bg-white/12"
+                      )}
+                    >
+                      {l.label}
+                    </a>
+                  ))}
+                </div>
+              </div>
+
+              <p className="mt-4 text-xs text-white/45">
+                Subtle wuxia-inspired UI (2D mist layers) — readable for recruiters.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* 全局 CSS（尽量“稳”，不搞怪） */}
       <style jsx global>{`
         .gold-text {
           background: linear-gradient(180deg, #ffe8a3 0%, #fff2c8 18%, #f2c96a 55%, #b07a18 100%);
@@ -611,15 +543,39 @@ function ContactSection({ email, github, resume }: { email: string; github: stri
           color: transparent;
         }
 
-        .glassCard {
-          border-radius: 28px;
+        .heroCard {
+          border-radius: 32px;
           border: 1px solid rgba(255, 255, 255, 0.12);
-          background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.22) 100%);
-          backdrop-filter: blur(10px);
-          box-shadow: 0 22px 55px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+          background: linear-gradient(180deg, rgba(255, 255, 255, 0.10) 0%, rgba(0, 0, 0, 0.24) 100%);
+          padding: 14px;
+          backdrop-filter: blur(12px);
+          box-shadow: 0 26px 90px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.10);
         }
 
-        /* 云雾铺层：只动 background-position（最稳） */
+        .statPill {
+          border-radius: 18px;
+          border: 1px solid rgba(255, 255, 255, 0.10);
+          background: rgba(0, 0, 0, 0.22);
+          padding: 12px;
+          backdrop-filter: blur(10px);
+        }
+
+        /* blade shine */
+        .bladeShine {
+          stroke-dasharray: 24 120;
+          stroke-dashoffset: 120;
+          transition: stroke 0.3s ease;
+        }
+        a.group:hover .bladeShine {
+          animation: bladeSweep 0.75s ease-out 1;
+        }
+        @keyframes bladeSweep {
+          0% { stroke-dashoffset: 120; opacity: 0; }
+          30% { opacity: 1; }
+          100% { stroke-dashoffset: 0; opacity: 0; }
+        }
+
+        /* mist sheets (cheap & stable) */
         .mistSheet {
           position: absolute;
           left: -20%;
@@ -634,99 +590,334 @@ function ContactSection({ email, github, resume }: { email: string; github: stri
           animation-name: mistDrift;
           animation-timing-function: linear;
           animation-iteration-count: infinite;
-          pointer-events: none;
         }
-        .mistSheet1 {
-          opacity: 0.16;
-          animation-duration: 52s;
-        }
+        .mistSheet1 { opacity: 0.18; animation-duration: 54s; }
         .mistSheet2 {
           bottom: -6vh;
-          opacity: 0.24;
+          opacity: 0.26;
           filter: blur(10px);
           animation-duration: 34s;
           animation-direction: reverse;
         }
-
         @keyframes mistDrift {
-          0% {
-            background-position: 0 0;
-          }
-          100% {
-            background-position: 1200px 0;
-          }
+          0% { background-position: 0 0; }
+          100% { background-position: 1200px 0; }
+        }
+        @keyframes mistFloat {
+          0% { transform: translate3d(0, 0, 0) scale(1); }
+          50% { transform: translate3d(26px, -12px, 0) scale(1); }
+          100% { transform: translate3d(0, 0, 0) scale(1); }
         }
 
-        @keyframes mistFloat {
-          0% {
-            transform: translate3d(0, 0, 0);
-          }
-          50% {
-            transform: translate3d(26px, -12px, 0);
-          }
-          100% {
-            transform: translate3d(0, 0, 0);
+        .mountainBand {
+          position: absolute;
+          left: 50%;
+          bottom: -2vh;
+          width: 1600px;
+          height: 420px;
+          transform: translateX(-50%);
+          background-repeat: no-repeat;
+          background-size: 1600px 420px;
+          opacity: 0.9;
+          filter: blur(0px);
+          pointer-events: none;
+        }
+
+        @media (max-width: 768px) {
+          .mountainBand {
+            width: 1200px;
+            background-size: 1200px 420px;
           }
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .mistSheet {
-            animation: none !important;
-          }
+          .mistSheet { animation: none !important; }
         }
       `}</style>
     </section>
   );
 }
 
-export default function Home() {
+function ProjectCard({ p }: { p: Project }) {
+  return (
+    <article className="projectCard group">
+      <div className="relative aspect-[16/10] overflow-hidden rounded-2xl border border-white/10">
+        {p.image ? (
+          <Image
+            src={p.image}
+            alt={p.name}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 92vw, 33vw"
+          />
+        ) : (
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_20%,rgba(255,220,150,0.18),transparent_55%),radial-gradient(circle_at_80%_65%,rgba(180,230,210,0.10),transparent_55%),linear-gradient(180deg,rgba(255,255,255,0.05),rgba(0,0,0,0.22))]" />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-black/0 to-black/40" />
+      </div>
+
+      <div className="mt-4">
+        <h3 className="text-base font-semibold text-amber-50">{p.name}</h3>
+        <p className="mt-1 text-sm text-white/65">{p.tagline}</p>
+
+        <ul className="mt-4 space-y-2 text-sm text-white/70">
+          {p.summary.map((x) => (
+            <li key={x} className="flex gap-2">
+              <span className="mt-[7px] h-1.5 w-1.5 rounded-full bg-amber-200/70 shrink-0" />
+              <span className="leading-6">{x}</span>
+            </li>
+          ))}
+        </ul>
+
+        <div className="mt-4 flex flex-wrap gap-2">
+          {p.tags.map((t) => (
+            <SigilChip key={t}>{t}</SigilChip>
+          ))}
+        </div>
+
+        <div className="mt-6 flex flex-wrap gap-2">
+          {p.links.map((l) => {
+            const isPrimary = l.variant === "primary";
+            return (
+              <a
+                key={l.href}
+                href={l.href}
+                target={l.external ? "_blank" : undefined}
+                rel={l.external ? "noreferrer" : undefined}
+                className={clsx(
+                  "inline-flex h-11 items-center justify-center rounded-full px-5 text-sm font-semibold transition hover:-translate-y-0.5 active:translate-y-0",
+                  isPrimary
+                    ? "bg-amber-300 text-black shadow-lg shadow-amber-900/25 hover:bg-amber-200"
+                    : "border border-white/16 bg-white/8 text-white hover:bg-white/12"
+                )}
+              >
+                {l.label}
+              </a>
+            );
+          })}
+        </div>
+      </div>
+
+      <style jsx global>{`
+        .projectCard {
+          border-radius: 28px;
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          background: rgba(255, 255, 255, 0.06);
+          padding: 16px;
+          backdrop-filter: blur(12px);
+          box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.10);
+          transition: transform 0.25s ease, background 0.25s ease;
+        }
+        .projectCard:hover {
+          transform: translateY(-4px);
+          background: rgba(255, 255, 255, 0.08);
+        }
+      `}</style>
+    </article>
+  );
+}
+
+function ProjectsSection({ projects }: { projects: Project[] }) {
+  return (
+    <section id="projects" className="relative min-h-[100svh] w-full overflow-hidden py-16 snap-start">
+      <div className="absolute inset-0 bg-gradient-to-b from-[#060913] via-[#0a0f20] to-[#05060d]" />
+      <div
+        className="absolute inset-0 opacity-55"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle at 18% 16%, rgba(255, 220, 150, 0.14), transparent 40%), radial-gradient(circle at 82% 64%, rgba(180, 230, 210, 0.09), transparent 46%)",
+        }}
+      />
+      <MistSheets />
+
+      <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 pt-10">
+        <div className="text-center">
+          <p className="text-xs uppercase tracking-[0.35em] text-amber-200/70">PROJECTS</p>
+          <h2 className="mt-3 text-3xl font-semibold text-amber-50 drop-shadow md:text-4xl">
+            Case Studies
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-white/65">
+            Links are real (Colab + downloads). Tags are informational chips.
+          </p>
+        </div>
+
+        <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">
+          {projects.map((p) => (
+            <ProjectCard key={p.name} p={p} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function AboutSection() {
+  return (
+    <section id="about" className="relative min-h-[100svh] w-full overflow-hidden py-16 snap-start">
+      <div className="absolute inset-0 bg-gradient-to-b from-[#060913] via-[#0a0f20] to-[#05060d]" />
+      <div
+        className="absolute inset-0 opacity-45"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle at 22% 22%, rgba(255, 220, 150, 0.12), transparent 42%), radial-gradient(circle at 78% 30%, rgba(180, 230, 210, 0.08), transparent 46%)",
+        }}
+      />
+      <MistSheets />
+
+      <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 pt-10">
+        <div className="text-center">
+          <p className="text-xs uppercase tracking-[0.35em] text-amber-200/70">ABOUT</p>
+          <h2 className="mt-3 text-3xl font-semibold text-amber-50 drop-shadow md:text-4xl">
+            How I work
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-white/65">
+            Simple process, clear metrics, and repeatable delivery.
+          </p>
+        </div>
+
+        <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-4">
+          {[
+            ["01", "Define the decision", "Clarify objective, constraints, and success metrics."],
+            ["02", "Build a clean pipeline", "QA checks, leakage-safe features, reproducible runs."],
+            ["03", "Validate & explain", "Cross-validation, uncertainty, interpretation."],
+            ["04", "Ship deliverables", "Readable report + next actions stakeholders can use."],
+          ].map(([n, t, d]) => (
+            <div
+              key={n}
+              className="rounded-3xl border border-white/12 bg-white/5 p-6 shadow-[0_24px_70px_rgba(0,0,0,0.55)] backdrop-blur transition-transform duration-300 hover:-translate-y-1"
+            >
+              <p className="text-xs font-semibold tracking-[0.3em] text-white/55">{n}</p>
+              <h3 className="mt-3 text-base font-semibold text-amber-50">{t}</h3>
+              <p className="mt-3 text-sm leading-6 text-white/70">{d}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ContactSection() {
+  return (
+    <section id="contact" className="relative min-h-[100svh] w-full overflow-hidden py-16 snap-start">
+      <div className="absolute inset-0 bg-gradient-to-b from-[#060913] via-[#0a0f20] to-[#05060d]" />
+      <div
+        className="absolute inset-0 opacity-50"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle at 18% 18%, rgba(255, 220, 150, 0.14), transparent 42%), radial-gradient(circle at 82% 72%, rgba(180, 230, 210, 0.08), transparent 46%)",
+        }}
+      />
+      <MistSheets />
+
+      <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 pt-10">
+        <div className="mx-auto max-w-3xl rounded-[36px] border border-white/12 bg-white/5 p-8 shadow-[0_30px_120px_rgba(0,0,0,0.60)] backdrop-blur md:p-10">
+          <h2 className="text-balance text-3xl font-semibold text-amber-50 md:text-4xl">
+            Let’s build something measurable.
+          </h2>
+          <p className="mt-4 text-sm leading-7 text-white/70 md:text-base">
+            If you need ML evaluation, clean data pipelines, or simulation-driven decisions, I can help you move fast with solid outputs.
+          </p>
+
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <PrimaryButton href="mailto:cchen90@stevens.edu">Email me</PrimaryButton>
+            <GhostButton href="/Changye_Resume.pdf">Download resume</GhostButton>
+            <GhostButton href="https://github.com/Changye0125" target="_blank" rel="noreferrer">
+              GitHub
+            </GhostButton>
+          </div>
+
+          <div className="mt-7 text-sm text-white/70">
+            <div className="flex flex-wrap gap-x-6 gap-y-2">
+              <span className="text-white/50">Email:</span>
+              <a className="hover:text-amber-200 transition" href="mailto:cchen90@stevens.edu">
+                cchen90@stevens.edu
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <footer className="py-10 text-center text-xs text-white/45">
+          © {new Date().getFullYear()} Changye Chen
+        </footer>
+      </div>
+    </section>
+  );
+}
+
+export default function Page() {
   const [open, setOpen] = useState(false);
 
-  // 你自己的信息
-  const email = "cchen90@stevens.edu";
-  const github = "https://github.com/Changye0125";
-  const resume = "/Changye_Resume.pdf";
+  // IMPORTANT: spaces in filenames are risky; encodeURI makes links safer.
+  const em624Pptx = encodeURI("/EM624 - Predicting NFL Game Outcomes.pptx");
+  const sys611Pdf = encodeURI("/SYS611_TermProject_NFL4thDown_MonteCarlo.pdf");
 
-  // 项目先放 placeholder，后面你给我链接/图片我再帮你“玉牌化”
   const projects: Project[] = [
     {
-      name: "NFL Play-by-Play ML Pipeline",
-      desc: "Leakage-free feature pipeline + model evaluation + interpretability.",
+      name: "NFL Play-by-Play ML Pipeline (EM624)",
+      tagline: "Leakage-safe features, strong baselines, and interpretable outputs.",
+      summary: [
+        "Built a leakage-safe feature pipeline using recent-form matchup trends.",
+        "Benchmarked classifiers with cross-validation and clear metrics.",
+        "Used SHAP to explain predictions for stakeholder-ready interpretation.",
+      ],
       tags: ["Python", "pandas", "scikit-learn", "XGBoost", "SHAP"],
-      link: "https://colab.research.google.com/",
-      repo: "https://github.com/Changye0125",
-      slides: "/",
+      image: "", // optional: add your NFL cover image later
+      links: [
+        {
+          label: "Open Colab",
+          href: "https://colab.research.google.com/drive/1cXyP8DP4dS2wa59tvASfKJl5-3Zb9NL6?usp=sharing",
+          variant: "primary",
+          external: true,
+        },
+        { label: "Download PPTX", href: em624Pptx, variant: "ghost" },
+      ],
     },
     {
-      name: "EEG / iEEG Data Standardization",
-      desc: "Unified schema (HDF5) + metadata + automated QA for training readiness.",
-      tags: ["Python", "HDF5", "Data Engineering", "QA"],
-      // link 留空表示 private/coming soon
+      name: "Monte Carlo Strategy Simulation (SYS611)",
+      tagline: "Compare policies with confidence intervals and explicit uncertainty.",
+      summary: [
+        "Estimated transition/scoring parameters from historical play-by-play data.",
+        "Simulated outcomes under multiple 4th-down decision policies.",
+        "Reported 95% CIs to quantify risk–reward trade-offs.",
+      ],
+      tags: ["Monte Carlo", "Simulation", "Analytics", "Confidence Intervals"],
+      image: "/montecarlo_16x10_1600w.webp",
+      links: [
+        {
+          label: "Open Colab",
+          href: "https://colab.research.google.com/drive/1FrYON171XMlLIq9T_8V8JcveaYF7LTzh?usp=sharing",
+          variant: "primary",
+          external: true,
+        },
+        { label: "Download PDF", href: sys611Pdf, variant: "ghost" },
+      ],
     },
     {
-      name: "Monte Carlo Simulation",
-      desc: "Policy comparison with confidence intervals for decision making.",
-      tags: ["Monte Carlo", "Simulation", "Analytics", "CI"],
-      link: "https://colab.research.google.com/",
+      name: "EEG / iEEG Data Standardization (Lab)",
+      tagline: "Unified schemas, metadata, and QA to make datasets training-ready.",
+      summary: [
+        "Converted heterogeneous raw formats into a consistent schema.",
+        "Standardized channels and preprocessing rules across sources.",
+        "Delivered QA checks + manifests + splits for downstream modeling.",
+      ],
+      tags: ["Data Engineering", "HDF5", "Metadata", "QA"],
+      image: "",
+      links: [
+        { label: "Details (on request)", href: "#contact", variant: "primary" },
+      ],
     },
   ];
 
   return (
-    <main id="top" className="w-full overflow-x-hidden bg-[#05060d] text-white">
+    <main className="w-full overflow-x-hidden bg-[#05060d] text-white snap-y snap-mandatory">
       <TopNav onOpen={() => setOpen(true)} />
+      <Drawer open={open} onClose={() => setOpen(false)} />
 
-      <Drawer
-        open={open}
-        onClose={() => setOpen(false)}
-        email={email}
-        github={github}
-        resume={resume}
-      />
-
-      <Hero email={email} />
+      <Hero projects={projects} />
       <ProjectsSection projects={projects} />
       <AboutSection />
-      <ContactSection email={email} github={github} resume={resume} />
+      <ContactSection />
     </main>
   );
 }
