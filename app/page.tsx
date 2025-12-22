@@ -343,7 +343,7 @@ export default function Home() {
               <div className="relative p-4">
                 <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-white/10">
                   <Image
-                    src="/images/me.webp"
+                    src="/me_4x5_1600w.webp"
                     alt="Portrait of Changye Chen"
                     fill
                     priority
