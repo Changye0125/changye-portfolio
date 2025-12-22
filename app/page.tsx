@@ -132,16 +132,17 @@ function GhostButton(props: React.ComponentProps<"a">) {
   );
 }
 
+/** square-ish chips (not pills) */
 function SigilChip({ children }: { children: React.ReactNode }) {
   return (
     <span
       className={clsx(
-        "inline-flex items-center gap-1 rounded-full px-3 py-1 text-[11px] text-white/70",
-        "border border-white/12 bg-white/[0.06]",
+        "inline-flex items-center gap-2 px-3 py-1.5 text-[11px] text-white/70",
+        "rounded-lg border border-white/12 bg-white/[0.06]",
         "shadow-[inset_0_1px_0_rgba(255,255,255,0.10)]"
       )}
     >
-      <span className="h-1 w-1 rounded-full bg-amber-200/70" />
+      <span className="h-2 w-2 bg-amber-200/70" />
       {children}
     </span>
   );
@@ -226,20 +227,12 @@ function SwordConnect() {
         <span className="pointer-events-none absolute -inset-2 rounded-full opacity-0 blur-xl transition duration-300 group-hover:opacity-100 bg-amber-300/15" />
       </span>
 
-      <span className="text-xs tracking-[0.34em] text-white/70 group-hover:text-amber-200">
-        CONNECT
-      </span>
+      <span className="text-xs tracking-[0.34em] text-white/70 group-hover:text-amber-200">CONNECT</span>
     </a>
   );
 }
 
-function Drawer({
-  open,
-  onClose,
-}: {
-  open: boolean;
-  onClose: () => void;
-}) {
+function Drawer({ open, onClose }: { open: boolean; onClose: () => void }) {
   useEffect(() => {
     if (!open) return;
     const onKeyDown = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -301,7 +294,12 @@ function Drawer({
               <a className="block hover:text-amber-200" href="mailto:cchen90@stevens.edu">
                 cchen90@stevens.edu
               </a>
-              <a className="block hover:text-amber-200" href="https://github.com/Changye0125" target="_blank" rel="noreferrer">
+              <a
+                className="block hover:text-amber-200"
+                href="https://github.com/Changye0125"
+                target="_blank"
+                rel="noreferrer"
+              >
                 GitHub →
               </a>
               <a className="block hover:text-amber-200" href="/Changye_Resume.pdf">
@@ -381,7 +379,7 @@ function MistDots() {
   );
 }
 
-function Hero({ projects }: { projects: Project[] }) {
+function Hero() {
   const [parallax, setParallax] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
@@ -398,10 +396,7 @@ function Hero({ projects }: { projects: Project[] }) {
   const pY = parallax.y * 4;
 
   return (
-    <section
-      id="top"
-      className="relative min-h-[100svh] w-full overflow-hidden px-4 sm:px-6 pt-24 sm:pt-28 pb-14 sm:pb-16 snap-start"
-    >
+    <section id="top" className="relative min-h-[100svh] w-full overflow-hidden px-4 sm:px-6 pt-24 sm:pt-28 pb-14 sm:pb-16">
       {/* base */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#060913] via-[#0a0f20] to-[#05060d]" />
 
@@ -431,12 +426,8 @@ function Hero({ projects }: { projects: Project[] }) {
             <p className="text-xs tracking-[0.34em] text-white/55">ENGINEERING MANAGEMENT • DATA & ML</p>
 
             <h1 className="mt-5 text-balance text-5xl sm:text-6xl md:text-7xl font-semibold leading-[1.05]">
-              <span className="gold-text drop-shadow-[0_18px_60px_rgba(0,0,0,0.6)] block">
-                Make It Work.
-              </span>
-              <span className="gold-text drop-shadow-[0_18px_60px_rgba(0,0,0,0.6)] block mt-2">
-                Make It Scale.
-              </span>
+              <span className="gold-text drop-shadow-[0_18px_60px_rgba(0,0,0,0.6)] block">Make It Work.</span>
+              <span className="gold-text drop-shadow-[0_18px_60px_rgba(0,0,0,0.6)] block mt-2">Make It Scale.</span>
             </h1>
 
             <p className="mt-6 max-w-xl mx-auto md:mx-0 text-sm sm:text-base leading-7 text-white/72">
@@ -457,15 +448,6 @@ function Hero({ projects }: { projects: Project[] }) {
               <GhostButton href="/Changye_Resume.pdf">Resume</GhostButton>
             </div>
 
-            <div className="mt-7 flex flex-wrap items-center gap-4 text-sm text-white/65 justify-center md:justify-start">
-              <a className="hover:text-amber-200 transition" href="https://github.com/Changye0125" target="_blank" rel="noreferrer">
-                GitHub →
-              </a>
-              <a className="hover:text-amber-200 transition" href="#contact">
-                Contact →
-              </a>
-            </div>
-
             <div className="mt-10">
               <a href="#projects" className="group inline-flex flex-col items-center md:items-start gap-1 text-amber-200/75">
                 <span className="text-xs uppercase tracking-[0.35em]">Scroll</span>
@@ -474,7 +456,7 @@ function Hero({ projects }: { projects: Project[] }) {
             </div>
           </div>
 
-          {/* right (bigger photo + quick card) */}
+          {/* right (photo + small stat pills only; no Featured) */}
           <div className="mx-auto w-full max-w-[520px]">
             <div className="heroCard">
               <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-white/10">
@@ -501,35 +483,6 @@ function Hero({ projects }: { projects: Project[] }) {
                   </div>
                 ))}
               </div>
-
-              <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.06] p-4">
-                <p className="text-sm font-semibold text-amber-50">Featured</p>
-                <p className="mt-1 text-xs text-white/60">
-                  {projects[0]?.name ?? "Projects"}
-                </p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {(projects[0]?.links ?? []).slice(0, 2).map((l) => (
-                    <a
-                      key={l.href}
-                      href={l.href}
-                      target={l.external ? "_blank" : undefined}
-                      rel={l.external ? "noreferrer" : undefined}
-                      className={clsx(
-                        "inline-flex h-10 items-center justify-center rounded-full px-4 text-xs font-semibold transition hover:-translate-y-0.5 active:translate-y-0",
-                        l.variant === "primary"
-                          ? "bg-amber-300 text-black shadow-lg shadow-amber-900/25 hover:bg-amber-200"
-                          : "border border-white/16 bg-white/8 text-white hover:bg-white/12"
-                      )}
-                    >
-                      {l.label}
-                    </a>
-                  ))}
-                </div>
-              </div>
-
-              <p className="mt-4 text-xs text-white/45">
-                Subtle wuxia-inspired UI (2D mist layers) — readable for recruiters.
-              </p>
             </div>
           </div>
         </div>
@@ -570,9 +523,17 @@ function Hero({ projects }: { projects: Project[] }) {
           animation: bladeSweep 0.75s ease-out 1;
         }
         @keyframes bladeSweep {
-          0% { stroke-dashoffset: 120; opacity: 0; }
-          30% { opacity: 1; }
-          100% { stroke-dashoffset: 0; opacity: 0; }
+          0% {
+            stroke-dashoffset: 120;
+            opacity: 0;
+          }
+          30% {
+            opacity: 1;
+          }
+          100% {
+            stroke-dashoffset: 0;
+            opacity: 0;
+          }
         }
 
         /* mist sheets (cheap & stable) */
@@ -591,7 +552,10 @@ function Hero({ projects }: { projects: Project[] }) {
           animation-timing-function: linear;
           animation-iteration-count: infinite;
         }
-        .mistSheet1 { opacity: 0.18; animation-duration: 54s; }
+        .mistSheet1 {
+          opacity: 0.18;
+          animation-duration: 54s;
+        }
         .mistSheet2 {
           bottom: -6vh;
           opacity: 0.26;
@@ -600,13 +564,23 @@ function Hero({ projects }: { projects: Project[] }) {
           animation-direction: reverse;
         }
         @keyframes mistDrift {
-          0% { background-position: 0 0; }
-          100% { background-position: 1200px 0; }
+          0% {
+            background-position: 0 0;
+          }
+          100% {
+            background-position: 1200px 0;
+          }
         }
         @keyframes mistFloat {
-          0% { transform: translate3d(0, 0, 0) scale(1); }
-          50% { transform: translate3d(26px, -12px, 0) scale(1); }
-          100% { transform: translate3d(0, 0, 0) scale(1); }
+          0% {
+            transform: translate3d(0, 0, 0) scale(1);
+          }
+          50% {
+            transform: translate3d(26px, -12px, 0) scale(1);
+          }
+          100% {
+            transform: translate3d(0, 0, 0) scale(1);
+          }
         }
 
         .mountainBand {
@@ -631,7 +605,9 @@ function Hero({ projects }: { projects: Project[] }) {
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .mistSheet { animation: none !important; }
+          .mistSheet {
+            animation: none !important;
+          }
         }
       `}</style>
     </section>
@@ -643,13 +619,7 @@ function ProjectCard({ p }: { p: Project }) {
     <article className="projectCard group">
       <div className="relative aspect-[16/10] overflow-hidden rounded-2xl border border-white/10">
         {p.image ? (
-          <Image
-            src={p.image}
-            alt={p.name}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 92vw, 33vw"
-          />
+          <Image src={p.image} alt={p.name} fill className="object-cover" sizes="(max-width: 768px) 92vw, 33vw" />
         ) : (
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_20%,rgba(255,220,150,0.18),transparent_55%),radial-gradient(circle_at_80%_65%,rgba(180,230,210,0.10),transparent_55%),linear-gradient(180deg,rgba(255,255,255,0.05),rgba(0,0,0,0.22))]" />
         )}
@@ -663,7 +633,7 @@ function ProjectCard({ p }: { p: Project }) {
         <ul className="mt-4 space-y-2 text-sm text-white/70">
           {p.summary.map((x) => (
             <li key={x} className="flex gap-2">
-              <span className="mt-[7px] h-1.5 w-1.5 rounded-full bg-amber-200/70 shrink-0" />
+              <span className="mt-[7px] h-1.5 w-1.5 rounded-sm bg-amber-200/70 shrink-0" />
               <span className="leading-6">{x}</span>
             </li>
           ))}
@@ -719,7 +689,7 @@ function ProjectCard({ p }: { p: Project }) {
 
 function ProjectsSection({ projects }: { projects: Project[] }) {
   return (
-    <section id="projects" className="relative min-h-[100svh] w-full overflow-hidden py-16 snap-start">
+    <section id="projects" className="relative min-h-[100svh] w-full overflow-hidden py-16">
       <div className="absolute inset-0 bg-gradient-to-b from-[#060913] via-[#0a0f20] to-[#05060d]" />
       <div
         className="absolute inset-0 opacity-55"
@@ -733,9 +703,7 @@ function ProjectsSection({ projects }: { projects: Project[] }) {
       <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 pt-10">
         <div className="text-center">
           <p className="text-xs uppercase tracking-[0.35em] text-amber-200/70">PROJECTS</p>
-          <h2 className="mt-3 text-3xl font-semibold text-amber-50 drop-shadow md:text-4xl">
-            Case Studies
-          </h2>
+          <h2 className="mt-3 text-3xl font-semibold text-amber-50 drop-shadow md:text-4xl">Case Studies</h2>
           <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-white/65">
             Links are real (Colab + downloads). Tags are informational chips.
           </p>
@@ -753,7 +721,7 @@ function ProjectsSection({ projects }: { projects: Project[] }) {
 
 function AboutSection() {
   return (
-    <section id="about" className="relative min-h-[100svh] w-full overflow-hidden py-16 snap-start">
+    <section id="about" className="relative min-h-[100svh] w-full overflow-hidden py-16">
       <div className="absolute inset-0 bg-gradient-to-b from-[#060913] via-[#0a0f20] to-[#05060d]" />
       <div
         className="absolute inset-0 opacity-45"
@@ -767,9 +735,7 @@ function AboutSection() {
       <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 pt-10">
         <div className="text-center">
           <p className="text-xs uppercase tracking-[0.35em] text-amber-200/70">ABOUT</p>
-          <h2 className="mt-3 text-3xl font-semibold text-amber-50 drop-shadow md:text-4xl">
-            How I work
-          </h2>
+          <h2 className="mt-3 text-3xl font-semibold text-amber-50 drop-shadow md:text-4xl">How I work</h2>
           <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-white/65">
             Simple process, clear metrics, and repeatable delivery.
           </p>
@@ -799,7 +765,7 @@ function AboutSection() {
 
 function ContactSection() {
   return (
-    <section id="contact" className="relative min-h-[100svh] w-full overflow-hidden py-16 snap-start">
+    <section id="contact" className="relative min-h-[100svh] w-full overflow-hidden py-16">
       <div className="absolute inset-0 bg-gradient-to-b from-[#060913] via-[#0a0f20] to-[#05060d]" />
       <div
         className="absolute inset-0 opacity-50"
@@ -812,11 +778,10 @@ function ContactSection() {
 
       <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 pt-10">
         <div className="mx-auto max-w-3xl rounded-[36px] border border-white/12 bg-white/5 p-8 shadow-[0_30px_120px_rgba(0,0,0,0.60)] backdrop-blur md:p-10">
-          <h2 className="text-balance text-3xl font-semibold text-amber-50 md:text-4xl">
-            Let’s build something measurable.
-          </h2>
+          <h2 className="text-balance text-3xl font-semibold text-amber-50 md:text-4xl">Let’s build something measurable.</h2>
           <p className="mt-4 text-sm leading-7 text-white/70 md:text-base">
-            If you need ML evaluation, clean data pipelines, or simulation-driven decisions, I can help you move fast with solid outputs.
+            If you need ML evaluation, clean data pipelines, or simulation-driven decisions, I can help you move fast with
+            solid outputs.
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -837,9 +802,7 @@ function ContactSection() {
           </div>
         </div>
 
-        <footer className="py-10 text-center text-xs text-white/45">
-          © {new Date().getFullYear()} Changye Chen
-        </footer>
+        <footer className="py-10 text-center text-xs text-white/45">© {new Date().getFullYear()} Changye Chen</footer>
       </div>
     </section>
   );
@@ -862,7 +825,7 @@ export default function Page() {
         "Used SHAP to explain predictions for stakeholder-ready interpretation.",
       ],
       tags: ["Python", "pandas", "scikit-learn", "XGBoost", "SHAP"],
-      image: "", // optional: add your NFL cover image later
+      image: "",
       links: [
         {
           label: "Open Colab",
@@ -903,18 +866,16 @@ export default function Page() {
       ],
       tags: ["Data Engineering", "HDF5", "Metadata", "QA"],
       image: "",
-      links: [
-        { label: "Details (on request)", href: "#contact", variant: "primary" },
-      ],
+      links: [{ label: "Details (on request)", href: "#contact", variant: "primary" }],
     },
   ];
 
   return (
-    <main className="w-full overflow-x-hidden bg-[#05060d] text-white snap-y snap-mandatory">
+    <main className="w-full overflow-x-hidden bg-[#05060d] text-white">
       <TopNav onOpen={() => setOpen(true)} />
       <Drawer open={open} onClose={() => setOpen(false)} />
 
-      <Hero projects={projects} />
+      <Hero />
       <ProjectsSection projects={projects} />
       <AboutSection />
       <ContactSection />
