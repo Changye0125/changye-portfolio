@@ -225,7 +225,7 @@ export default function Home() {
         "Used SHAP to explain predictions for stakeholder-ready interpretation.",
       ],
       tags: ["Python", "pandas", "scikit-learn", "XGBoost", "SHAP"],
-      image: "", // 先空着 -> 自动显示高级占位图
+      image: "/me_4x5_1600w.webp", // 先空着 -> 自动显示高级占位图
       ppt: "/EM624%20-%20Predicting%20NFL%20Game%20Outcomes.pptx",
       link: "https://colab.research.google.com/drive/1cXyP8DP4dS2wa59tvASfKJl5-3Zb9NL6?usp=sharing",
       featured: true,
