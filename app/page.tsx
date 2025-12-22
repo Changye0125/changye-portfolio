@@ -414,11 +414,12 @@ function Hero() {
             </div>
 
             {/* improved CTA: bigger + better placement */}
-            <div className="mt-9 flex items-center justify-center md:justify-start">
+            {/* CTA */}
+            <div className="mt-8 flex justify-center">
               <a
                 href="#projects"
                 className={clsx(
-                  "inline-flex h-12 items-center justify-center rounded-full px-10 text-base font-semibold",
+                  "inline-flex h-12 items-center justify-center rounded-full px-14 text-base font-semibold",
                   "bg-amber-300 text-black shadow-lg shadow-amber-900/25",
                   "transition hover:-translate-y-0.5 hover:bg-amber-200 active:translate-y-0",
                   "focus:outline-none focus:ring-2 focus:ring-amber-200/60"
